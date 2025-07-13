@@ -542,6 +542,8 @@ canvas#grafico-valvulas {
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.5rem;
+    /* Ensure it remains horizontal or wraps horizontally */
+    flex-direction: row; /* Add this to ensure horizontal direction */
   }
 
   .side-btn {
@@ -584,11 +586,17 @@ canvas#grafico-valvulas {
     padding: 1rem;
   }
   .sides {
-    flex-direction: column;
+    /* Override the column direction for smaller screens */
+    flex-direction: row; /* Changed to row to keep horizontal layout */
+    justify-content: center; /* Keep buttons centered */
+    /* Adjust gap or width for better fit if needed */
+    gap: 0.3rem; /* Slightly smaller gap for very small screens */
   }
   .side-btn {
-    width: 90%;
-    max-width: 200px;
+    width: auto; /* Let content dictate width, or set a min/max */
+    flex: 1 1 auto; /* Allow buttons to grow/shrink based on content */
+    padding: 0.4rem 0.8rem; /* Smaller padding for smaller buttons */
+    font-size: 0.9rem; /* Smaller font size */
   }
   .valvula {
     width: 100px;
