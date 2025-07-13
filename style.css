@@ -48,6 +48,9 @@ body {
   transition: background 0.4s, color 0.3s;
 }
 
+
+
+
 /* Views */
 .view {
   display: none;
@@ -135,6 +138,20 @@ form button:hover {
   align-items: center;
   padding: 1rem 2rem 0.5rem 2rem;
   gap: 1rem; /* Added gap for header buttons */
+  position: relative;
+}
+/* Estilos para o display do nome do usuário */
+.user-info {
+    position: absolute; /* Posiciona o elemento de forma absoluta dentro do seu pai relativo (.valve-header) */
+    left: 10px;        /* Distância do lado esquerdo do cabeçalho */
+    top: 10px;         /* Distância do topo do cabeçalho */
+    font-weight: bold;
+    color: #333; /* Cor do texto, ajuste se necessário */
+    font-size: 1.1em; /* Tamanho da fonte, ajuste se necessário */
+    white-space: nowrap; /* Evita que o texto quebre linha */
+    overflow: hidden;    /* Esconde o que transbordar */
+    text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
+    z-index: 10; /* Garante que ele fique acima de outros elementos se houver sobreposição */
 }
 .valve-header button {
   background: #fff;
@@ -153,27 +170,30 @@ form button:hover {
 }
 
 /* Inputs de pressão */
-#inputs-pressao {
-  background: var(--box-bg); /* Use theme variable */
-  border-radius: 12px;
-  box-shadow: var(--shadow); /* Use theme variable */
-  padding: 1.2rem 2rem 1rem 2rem;
-  margin: 0 auto 1.5rem auto;
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-}
-#inputs-pressao label {
+
+/* Estilo para o botão SAIR */
+#btn-sair {
+      padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 25px; /* Mais arredondado */
+  color: #fff;
+  cursor: pointer;
   font-weight: 600;
-  color: var(--primary);
-  margin-bottom: 0.2rem;
+  font-size: 1.1rem;
+  margin: 0 0.5rem; /* Espaçamento entre eles */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais proeminente */
+  transition: background 0.2s, transform 0.1s;
 }
-#inputs-pressao input {
-  width: 100%;
-  margin-bottom: 0.5rem;
-  background: var(--input-bg);
+
+#btn-sair {
+  background: var(--success-color); /* Usando a variável de cor de sucesso */
 }
+
+#btn-sair:hover {
+  background: var(--success-color-darken); /* Usando a variável de cor escurecida */
+  transform: translateY(-2px);
+}
+
 
 /* Lados */
 .sides {
@@ -298,6 +318,7 @@ form button:hover {
 .valvula.nota-4 { background: linear-gradient(135deg, #ffb347, #ff8300); /* laranja */ color: #7a3c00; }
 .valvula.nota-5 { background: linear-gradient(135deg, #ff4d4d, #cc0000); /* vermelho */ }
 
+
 /* Pergunta Global */
 .pergunta-global-container {
   max-width: 450px;
@@ -348,7 +369,7 @@ form button:hover {
   text-align: center;
   margin-top: 2rem;
 }
-#btn-reset,
+
 #btn-confirmar {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -362,13 +383,7 @@ form button:hover {
   transition: background 0.2s, transform 0.1s;
 }
 
-#btn-reset {
-  background: var(--error-color); /* Usando a variável de cor de erro */
-}
-#btn-reset:hover {
-  background: var(--error-color-darken); /* Usando a variável de cor escurecida */
-  transform: translateY(-2px);
-}
+
 
 #btn-confirmar {
   background: var(--success-color); /* Usando a variável de cor de sucesso */
@@ -708,43 +723,6 @@ canvas#grafico-valvulas {
   }
 }
 
-#inputs-pressao {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.2rem;
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-}
-
-#inputs-pressao .input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-#inputs-pressao label {
-  font-weight: 600;
-  color: #333;
-  font-size: 0.95rem;
-}
-
-#inputs-pressao input {
-  padding: 0.6rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  background: #f9f9f9;
-  outline: none;
-}
-
-#inputs-pressao input:focus {
-  border-color: #007bff;
-  background: #fff;
-}
 
 /* Estiliza a área de seleção lateral e botões */
 .area-buttons,
@@ -821,6 +799,16 @@ canvas[data-empty="true"]::after {
 
 /* Botões dos lados (A–D) lado a lado e menores no celular */
 
+/* Estilos para o título clicável (Lado X (Área Y)) */
+.clickable-title {
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    text-decoration: underline; /* Adiciona um sublinhado para parecer um link */
+    color: #007bff; /* Cor azul para parecer um link */
+    transition: color 0.2s ease; /* Transição suave de cor ao passar o mouse */
+}
 
+.clickable-title:hover {
+    color: #0056b3; /* Cor mais escura ao passar o mouse */
+}
 
 

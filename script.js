@@ -27,13 +27,13 @@ const countsByArea = {
 // Quais índices devem ficar quadrados (0‑based) por área→lado
 const squareIndices = {
   'Raizer': {
-    C: [11]
-
+    C: [1],
+    D: [2]  // Apenas a Válvula 11 (índice 10) de Raizer C
   },
   'Caixa': {
     // AGORA, 'A' e 'B' estão juntos dentro da mesma chave 'Caixa'
-    B: [7, 4], // Válvula 5 (índice 4) e Válvula 10 (índice 9) de Caixa B
-    A: [1]    // Válvula 3 (índice 2) de Caixa A
+    B: [0, 4], // Válvula 5 (índice 4) e Válvula 10 (índice 9) de Caixa B
+    A: [2]    // Válvula 3 (índice 2) de Caixa A
   }
 };
 
@@ -44,7 +44,7 @@ let inputRaizer, inputCaixa, inputUsuario, inputArea;
 let modalPerfil, btnSalvarPerfil, modalReset, btnSimReset, btnNaoReset;
 let modalConfirmar, btnSimConfirmar, btnNaoConfirmar;
 let modalResumo, resumoTextModal, btnFecharResumo, btnDownload;
-
+let userDisplay;
 /**
  * Retorna os nomes de válvulas contínuos para a área e lado informados,
  * baseando-se em countsByArea e no mapeamento global de 1 a 48.
@@ -89,11 +89,35 @@ function showView(id) {
 }
 
 // Inicia o app após login
+// Inicia o app após login
 function startApp() {
   showView('valve-view');
-  const uid = firebase.auth().currentUser.uid;
-  db.collection('users').doc(uid).get()
-    .then(doc => inputUsuario.value = doc.data().nome || '');
+
+  // ESSA PARTE É CRÍTICA E JÁ ESTÁ CORRETA DA ÚLTIMA VEZ:
+  // Obtém a referência do elemento user-display AQUI,
+  // logo no início da função, antes de usá-lo.
+  const userDisplayElement = document.getElementById('user-display');
+
+  if (userDisplayElement) { // Verifica se o elemento foi encontrado
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      const uid = user.uid;
+      db.collection('users').doc(uid).get()
+        .then(doc => {
+          const userName = doc.data()?.nome || user.displayName || user.email || 'Usuário Desconhecido';
+          userDisplayElement.textContent = `Bem-vindo, ${userName}!`;
+        })
+        .catch(error => {
+          console.error("Erro ao carregar dados do usuário:", error);
+          userDisplayElement.textContent = `Bem-vindo, ${user.displayName || user.email || 'Usuário Desconhecido'}!`;
+        });
+    } else {
+      userDisplayElement.textContent = 'Nenhum usuário logado.';
+    }
+  } else {
+    console.error("Erro: Elemento 'user-display' com ID não encontrado no DOM. Verifique seu index.html.");
+  }
 
   // Restaura posição salva
   const savedArea = localStorage.getItem('savedArea');
@@ -101,7 +125,7 @@ function startApp() {
   if (savedArea && countsByArea[savedArea]) currentArea = savedArea;
   if (savedSide && countsByArea[currentArea][savedSide]) currentSide = savedSide;
 
-  inputArea.value = currentArea;
+  // inputArea.value = currentArea; // Se ainda usar este campo
   initValves();
 }
 
@@ -220,14 +244,14 @@ function mostrarPergunta(index, nome) {
 
 // Bind de botões de reset, confirmar, download, etc.
 function bindListeners() {
-  document.getElementById('btn-reset').onclick = () => modalReset.classList.add('show');
+  
   btnSimReset.onclick = () => {
     votos[currentArea][currentSide] = {};
     confirmadas[currentArea][currentSide] = {};
     modalReset.classList.remove('show');
     initValves();
   };
-  btnNaoReset.onclick = () => modalReset.classList.remove('show');
+ 
 
   document.getElementById('btn-confirmar').onclick = () => modalConfirmar.classList.add('show');
   btnSimConfirmar.onclick = async () => {
@@ -315,13 +339,14 @@ function updateActiveSideButtonValveView() {
 // Evento inicial
 document.addEventListener('DOMContentLoaded', () => {
   // Referências
+   const sideTitleElement = document.getElementById('side-title');
   sideBtns          = document.querySelectorAll('#valve-view .side-btn');
   areaBtns          = document.querySelectorAll('#valve-view .area-button');
   sideTitle         = document.getElementById('side-title');
   container         = document.getElementById('valvulas-container');
   perguntaContainer = document.getElementById('pergunta-global-container');
-  inputRaizer       = document.getElementById('pressao-raizer');
-  inputCaixa        = document.getElementById('pressao-caixa');
+  inputRaizer       = document.getElementById('inputRaizer');
+  inputCaixa        = document.getElementById('inputCaixa');
   inputUsuario      = document.getElementById('input-usuario');
   inputArea         = document.getElementById('input-area');
   modalPerfil       = document.getElementById('modal-perfil');
@@ -384,6 +409,60 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('savedSide', currentSide);
     initValves();
   });
+
+    // Event listener para o novo botão "Ver Status das Válvulas"
+  const btnShowValvesStatus = document.getElementById('btn-show-valves-status');
+  if (btnShowValvesStatus) {
+    btnShowValvesStatus.addEventListener('click', () => {
+      showView('current-valve-status-view');
+      // Chame initStatisticsView ou renderStatisticsValves aqui
+      // para garantir que as válvulas sejam carregadas na nova view
+      // caso o usuário navegue para lá.
+      initStatisticsView(); // ou renderStatisticsValves(); dependendo de como você quer o estado inicial.
+    });
+  }
+
+  // Event listener para o botão "Voltar" na nova view
+  const backToStatisticsFromValvesBtn = document.getElementById('back-to-statistics-from-valves');
+  if (backToStatisticsFromValvesBtn) {
+    backToStatisticsFromValvesBtn.addEventListener('click', () => {
+      showView('statistics-view');
+    });
+  }
+
+    // Adiciona listener para o botão "Pressões"
+  const btnShowPressureInput = document.getElementById('btn-show-pressure-input');
+  if (btnShowPressureInput) {
+    btnShowPressureInput.addEventListener('click', () => {
+      showView('pressure-input-view'); // Mostra a nova view de entrada de pressão
+    });
+  }
+
+  // Event listener para o botão "Voltar" na pressure-input-view (já deve existir se você usou o HTML acima)
+  const backFromPressureInputBtn = document.querySelector('#pressure-input-view .back-button');
+  if (backFromPressureInputBtn) {
+    backFromPressureInputBtn.addEventListener('click', () => {
+      showView('valve-view'); // Volta para a valve-view
+    });
+  }
+
+    if (sideTitleElement) { // Verifica se o elemento foi encontrado no DOM
+    sideTitleElement.addEventListener('click', () => {
+      // Pega a área e o lado que estão sendo exibidos.
+      // É mais seguro pegar do localStorage, pois são a fonte da verdade após navegação.
+      const area = localStorage.getItem('savedArea') || currentArea; 
+      const side = localStorage.getItem('savedSide') || currentSide; 
+
+      if (area && side) {
+        // Constrói a URL com os parâmetros de query
+        window.location.href = `imagem-detalhe.html?area=${encodeURIComponent(area)}&side=${encodeURIComponent(side)}`;
+      } else {
+        console.error('Erro: Área ou Lado não definidos para exibir a imagem detalhada.');
+        alert('Não foi possível exibir a imagem detalhada: selecione uma área e um lado.');
+      }
+    });
+  }
+
 });
 
 document.addEventListener('DOMContentLoaded', () => {
