@@ -810,60 +810,27 @@ canvas[data-empty="true"]::after {
   display: block;
 }
 
-/* 👇 Força botões de lado (A–D) ficarem lado a lado e pequenos no celular */
+
+/* Botões dos lados (A–D) lado a lado e menores no celular */
 @media (max-width: 768px) {
-  .sides {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-    flex-direction: row !important; /* Força horizontal mesmo no celular */
-  }
-
-  .side-btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-    flex: 1 1 22%;
-    max-width: 80px;
-    min-width: 60px;
-  }
-}
-
-@media (max-width: 768px) {
-  .sides {
-    flex-wrap: wrap;
-    justify-content: center;
-    flex-direction: row !important;
-    gap: 0.4rem;
-  }
-
-  .side-btn {
-    padding: 0.4rem 0.7rem;
-    font-size: 0.85rem;
-    flex: 1 1 20%;
-    max-width: 70px;
-    min-width: 55px;
-  }
-}
-
-/* Força botões de lado (A–D) lado a lado no celular, sem quebrar */
-@media (max-width: 480px) {
   .sides {
     display: flex;
     flex-wrap: nowrap;        /* impede quebra de linha */
     justify-content: center;
-    gap: 0.3rem;
-    overflow-x: auto;         /* scroll se for necessário */
+    gap: 0.4rem;
+    overflow-x: auto;         /* scroll horizontal se necessário */
     padding: 0.5rem 0;
   }
 
   .side-btn {
-    padding: 0.4rem 0.6rem;
+    padding: 0.4rem 0.7rem;
     font-size: 0.8rem;
     width: auto;
     min-width: 50px;
     max-width: 65px;
-    flex-shrink: 0;           /* impede encolhimento forçado */
+    flex-shrink: 0;
   }
 }
+
 
 
