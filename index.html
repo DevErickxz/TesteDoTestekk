@@ -341,7 +341,7 @@
       <button class="side-btn" data-side="D">D</button>
     </div>
 
-    <button id="goToImagePageButton">Ver Imagem da Área</button>
+   
     <h2 id="side-title" class="clickable-title"></h2> <div class="image-area">
     <img id="area-image" src="" alt="">
 
@@ -806,20 +806,12 @@ async function gerarGrafico() {
 
 
     // NOVO CÓDIGO JAVASCRIPT: Botão "Ver Imagem da Área" e Título de Display (SEU CÓDIGO ORIGINAL - MANTIDO)
-    const goToImagePageButton = document.getElementById('goToImagePageButton');
+
     // currentAreaSideDisplay não está declarado no seu script, então o código abaixo pode dar erro.
     // Se quiser um título dinâmico, você precisaria adicionar um elemento HTML com esse ID.
     // const currentAreaSideDisplay = document.getElementById('currentAreaSideDisplay');
 
 
-    goToImagePageButton.addEventListener('click', function() {
-        if (typeof currentArea !== 'undefined' && typeof currentSide !== 'undefined' && currentArea && currentSide) {
-            const url = `imagem-detalhe.html?area=${currentArea}&side=${currentSide}`;
-            window.location.href = url; // Navega para a nova página
-        } else {
-            alert('Por favor, selecione uma Área (Caixa/Raizer) e um Lado (A/B/C/D) primeiro.');
-        }
-    });
 
     function showSearchGraphView() {
         showView('search-graph-view');
