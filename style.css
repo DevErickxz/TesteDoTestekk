@@ -133,27 +133,48 @@ form button:hover {
 
 /* Header */
 .valve-header {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 1rem 2rem 0.5rem 2rem;
-  gap: 1rem; /* Added gap for header buttons */
-  position: relative;
+    display: grid; /* Altera para layout de Grid */
+    /* Define 3 colunas:
+       1fr: Uma coluna flexível à esquerda (para espaçamento ou itens que você queira lá)
+       auto: Uma coluna que se adapta ao conteúdo do nome do usuário (para centralizar ele)
+       1fr: Uma coluna flexível à direita (para os botões) */
+    grid-template-columns: 1fr auto 1fr;
+    
+    /* Remove as propriedades Flexbox antigas que não são mais necessárias com Grid */
+    /* justify-content: space-between; */
+    /* align-items: flex-start; */
+    /* flex-wrap: wrap; */
+    
+    padding-top: 0;          /* Mantém o nome do usuário colado no topo do header */
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    
+    background-color: #f8f8f800;
+    border-bottom: 1px solid #dddddd79;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+    /* `position: relative;` pode ser mantido se houver outros elementos que o usem como referência */
 }
 /* Estilos para o display do nome do usuário */
 .user-info {
-  display: flex;
-
-
-      /* Distância do topo do cabeçalho */
+    grid-column: 2 / 3;      /* Coloca o .user-info na segunda coluna do Grid (a coluna 'auto') */
+    justify-self: center;    /* Centraliza o conteúdo horizontalmente dentro da sua célula Grid */
+    align-self: flex-start;  /* Alinha o conteúdo ao topo da sua célula Grid (já que padding-top é 0) */
+    
     font-weight: bold;
-    color: #333; /* Cor do texto, ajuste se necessário */
-    font-size: 1.5em; /* Tamanho da fonte, ajuste se necessário */
-    white-space: nowrap; /* Evita que o texto quebre linha */
-    overflow: hidden;    /* Esconde o que transbordar */
-    text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
-    z-index: 10; /* Garante que ele fique acima de outros elementos se houver sobreposição */
+    color: #333;
+    /* ***** MUDANÇA AQUI: Font-size adaptável usando clamp() ***** */
+    /* O clamp() permite que o tamanho da fonte se adapte.
+       - Primeiro valor (0.9em): Tamanho mínimo da fonte.
+       - Segundo valor (2vw): Tamanho ideal da fonte, 2% da largura da viewport (tela).
+       - Terceiro valor (1.1em): Tamanho máximo da fonte.
+       A fonte irá crescer e diminuir entre 0.9em e 1.1em, com base na largura da tela. */
+    font-size: clamp(0.9em, 2vw, 1.1em); 
+    
+    /* Remova qualquer outra propriedade de posicionamento (top, left, absolute, z-index) */
 }
+
 .valve-header button {
   background: #fff;
   color: var(--primary);
