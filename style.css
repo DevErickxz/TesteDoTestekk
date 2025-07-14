@@ -142,12 +142,13 @@ form button:hover {
 }
 /* Estilos para o display do nome do usuário */
 .user-info {
-    display: flex;
-    align-items: center;
+  display: flex;
+
+
       /* Distância do topo do cabeçalho */
     font-weight: bold;
     color: #333; /* Cor do texto, ajuste se necessário */
-    font-size: 1.1em; /* Tamanho da fonte, ajuste se necessário */
+    font-size: 1.5em; /* Tamanho da fonte, ajuste se necessário */
     white-space: nowrap; /* Evita que o texto quebre linha */
     overflow: hidden;    /* Esconde o que transbordar */
     text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
@@ -193,6 +194,73 @@ form button:hover {
   background: var(--success-color-darken); /* Usando a variável de cor escurecida */
   transform: translateY(-2px);
 }
+
+
+#btn-show-pressure-input {
+  padding: 0.75rem 1.5rem;
+
+  border: none;
+  border-radius: 25px; /* Mais arredondado */
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 30px 1rem; /* Espaçamento entre eles */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais proeminente */
+  transition: background 0.2s, transform 0.1s;
+}
+
+#btn-show-pressure-input {
+  background: var(--success-color); /* Usando a variável de cor de sucesso */
+}
+
+#btn-show-pressure-input:hover {
+  background: var(--success-color-darken); /* Usando a variável de cor escurecida */
+  transform: translateY(-2px);
+}
+
+
+
+
+#btn-Graphics {
+  padding: 0.75rem 1.5rem;
+
+  border: none;
+  border-radius: 25px; /* Mais arredondado */
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0 1rem; /* Espaçamento entre eles */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais proeminente */
+  transition: background 0.2s, transform 0.1s;
+}
+
+#btn-Graphics {
+  background: var(--success-color); /* Usando a variável de cor de sucesso */
+}
+
+#btn-Graphics:hover {
+  background: var(--success-color-darken); /* Usando a variável de cor escurecida */
+  transform: translateY(-2px);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* Lados */
