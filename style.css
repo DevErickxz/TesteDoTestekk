@@ -170,7 +170,7 @@ form button:hover {
        - Segundo valor (2vw): Tamanho ideal da fonte, 2% da largura da viewport (tela).
        - Terceiro valor (1.1em): Tamanho máximo da fonte.
        A fonte irá crescer e diminuir entre 0.9em e 1.1em, com base na largura da tela. */
-    font-size: clamp(0.8em, 2vw, 0.70em); 
+    font-size: clamp(0.7em, 2vw, 0.70em); 
     
     /* Remova qualquer outra propriedade de posicionamento (top, left, absolute, z-index) */
 }
