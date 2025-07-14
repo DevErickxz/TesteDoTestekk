@@ -160,7 +160,8 @@ form button:hover {
 .user-info {
     grid-column: 2 / 3;      /* Coloca o .user-info na segunda coluna do Grid (a coluna 'auto') */
     justify-self: center;    /* Centraliza o conteúdo horizontalmente dentro da sua célula Grid */
-    align-self: flex-start;  /* Alinha o conteúdo ao topo da sua célula Grid (já que padding-top é 0) */
+    align-self: flex-start;
+    white-space:pre-wrap;  /* Alinha o conteúdo ao topo da sua célula Grid (já que padding-top é 0) */
     
     font-weight: bold;
     color: #333;
