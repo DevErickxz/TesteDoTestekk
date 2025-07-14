@@ -142,9 +142,9 @@ form button:hover {
 }
 /* Estilos para o display do nome do usuário */
 .user-info {
-    position: absolute; /* Posiciona o elemento de forma absoluta dentro do seu pai relativo (.valve-header) */
-    left: 10px;        /* Distância do lado esquerdo do cabeçalho */
-    top: 10px;         /* Distância do topo do cabeçalho */
+    display: flex;
+    align-items: center;
+      /* Distância do topo do cabeçalho */
     font-weight: bold;
     color: #333; /* Cor do texto, ajuste se necessário */
     font-size: 1.1em; /* Tamanho da fonte, ajuste se necessário */

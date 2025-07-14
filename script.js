@@ -3,7 +3,7 @@
 // CONFIG INICIAL
 
 // Lista global de todas as válvulas, usada na view de votação
-const allValves = Array.from({ length: 48 }, (_, i) => `Válvula ${i + 1}`);
+const allValves = Array.from({ length: 48 }, (_, i) => `PL ${i + 1}`);
 
 let currentSide = 'A';
 let currentArea = 'Caixa'; // Área atual
@@ -202,7 +202,7 @@ function renderValves() {
     wrapper.innerHTML = `
       <div class="valvula nota-${nota}${isSquare ? ' square' : ''}">
         <div class="valvula-label">${nome}</div>
-        <div class="nota-label">Nota: ${nota}</div>
+        <div class="nota-label">Grau: ${nota}</div>
       </div>`;
     wrapper.onclick = () => handleVoto(i, nome);
     container.appendChild(wrapper);
@@ -225,7 +225,7 @@ function mostrarPergunta(index, nome) {
   const box = document.createElement('div');
   box.className = 'pergunta-container';
   box.innerHTML = `
-    <div class="pergunta">Qual nota (1 a 5) para ${nome}?</div>
+    <div class="pergunta">Qual grau (1 a 5) para ${nome}?</div>
     <div class="respostas">
       ${[1,2,3,4,5].map(n => `<button>${n}</button>`).join('')}
     </div>`;
