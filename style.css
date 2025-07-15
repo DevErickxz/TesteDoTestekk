@@ -621,7 +621,7 @@ form button:hover {
 }
 
 canvas#grafico-valvulas {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   background: var(--box-bg);
   padding: 1.5rem;
@@ -790,7 +790,7 @@ canvas#grafico-valvulas {
 .chart-container {
   position: relative;
   width: 100%;
-  height: 500px;
+  height: 400px;
   background: #f8f9fa;
   border-radius: 12px;
   padding: 1rem;
@@ -901,4 +901,20 @@ canvas[data-empty="true"]::after {
     color: #0056b3; /* Cor mais escura ao passar o mouse */
 }
 
+
+@media (max-width: 768px) {
+  canvas#grafico-valvulas,
+  canvas#search-chart-canvas {
+  width: 900px;                /* ocupa toda a largura da tela */
+              /* garante que não ultrapasse o contêiner */
+  max-height: 280px;                /* altura ajusta conforme o conteúdo */
+  aspect-ratio: 16 / 4;         /* largura maior que altura (achatado horizontalmente) */
+  display: block;
+  margin: 1.5rem auto 0 auto;  /* espaço acima */
+              /* remove espaço interno se houver */
+  box-sizing: border-box;
+  }
+
+
+}
 
