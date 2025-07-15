@@ -4,11 +4,6 @@ let currentStatisticsSide = 'A';
 let currentStatisticsArea = 'Caixa';
 let currentSelectedValve = null;
 let statisticsChart = null;
-// statistics.js
-
-// Variáveis para armazenar as instâncias dos gráficos neste arquivo
-let meuGraficoDeSujeiraInstancia = null; // Se este arquivo lida com grafico-sujeira-valvula
-let meuGraficoDeEstatisticaInstancia = null; // Se este arquivo lida com chart-container ou outro gráfico
 
 async function initStatisticsView() {
   currentStatisticsSide = 'A';

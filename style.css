@@ -790,7 +790,7 @@ canvas#grafico-valvulas {
 .chart-container {
   position: relative;
   width: 100%;
-  height: 400px;
+  height: 500px;
   background: #f8f9fa;
   border-radius: 12px;
   padding: 1rem;
@@ -917,4 +917,3 @@ canvas[data-empty="true"]::after {
 
 
 }
-
