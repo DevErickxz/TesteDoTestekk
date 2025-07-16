@@ -490,7 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById('btn-gerar-grafico').addEventListener('click', () => {
-  const valve = getSelectedValve(); // ou outro método para obter a válvula selecionada
+  const valve = currentselectedValve; // ou outro método para obter a válvula selecionada
   if (!valve) {
     alert('Selecione uma válvula primeiro!');
     return;

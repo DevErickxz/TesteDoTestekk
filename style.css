@@ -950,11 +950,7 @@ canvas[data-empty="true"]::after {
   padding: 1rem;
   gap: 1rem;
 }
-#grafico-sujeira-valvula {
-  width: 100%;
-  max-width: 800px;
-  height: 400px;
-}
+
 .back-button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
