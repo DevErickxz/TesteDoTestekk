@@ -336,6 +336,19 @@ function updateActiveSideButtonValveView() {
   );
 }
 
+const themeToggle = document.getElementById('theme-toggle');
+function applyTheme(t) {
+  document.body.classList.toggle('dark', t==='dark');
+  localStorage.setItem('theme', t);
+}
+// Ao carregar a página
+applyTheme(localStorage.getItem('theme') || 'light');
+// Ao clicar no botão
+themeToggle.addEventListener('click', () => {
+  applyTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
+});
+
+
 // Evento inicial
 document.addEventListener('DOMContentLoaded', () => {
   // Referências
@@ -475,6 +488,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // popula na carga, sem precisar clicar
   atualizarSelectValvulasComBaseNaAreaELado();
 });
+
+document.getElementById('btn-gerar-grafico').addEventListener('click', () => {
+  const valve = getSelectedValve(); // ou outro método para obter a válvula selecionada
+  if (!valve) {
+    alert('Selecione uma válvula primeiro!');
+    return;
+  }
+
+  const url = `statistics.html?lado=${currentSide}&area=${currentArea}&valvula=${encodeURIComponent(valve)}`;
+  window.location.href = url;
+});
+
 
 
 
