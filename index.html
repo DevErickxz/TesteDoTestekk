@@ -727,6 +727,22 @@ async function gerarGrafico() {
       link.href = document.getElementById('grafico-sujeira-valvula').toDataURL('image/png');
       link.click();
     }
+        // FUNÇÃO AJUSTADA: showGraphOptions agora vai para a view do gráfico
+    function showGraphOptions() {
+        showView('graph-view');
+        // Você pode decidir se quer mostrar um gráfico padrão ao entrar na showGraphOptions
+        // ou esperar o usuário clicar em "Ver Gráfico em Barra".
+        // O código abaixo esconde inicialmente e aguarda o clique no botão "Ver Gráfico em Barra".
+        document.getElementById('bar-chart-container').style.display = 'none'; // Esconde o gráfico de barras inicialmente
+    }
+
+    // FUNÇÃO AJUSTADA: showBarChart agora exibe o contêiner e carrega o gráfico
+    function showBarChart() {
+        document.getElementById('bar-chart-container').style.display = 'block'; // Mostra o contêiner do gráfico
+        // Assume que você quer carregar o Lado A da área atual (Raizer por padrão)
+        selecionarLadoGrafico('A'); // Carrega o gráfico do Lado A por padrão
+    }
+
 
     // FUNÇÃO AJUSTADA: showGraphOptions agora vai para a view do gráfico
 
