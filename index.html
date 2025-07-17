@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4CAF50">
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gráfico de Sujeira</title>
@@ -138,7 +141,9 @@
     }
 
     /* Estilo para ocultar o gráfico de barras inicialmente */
-
+    #bar-chart-container {
+        display: none;
+    }
     /* Estilo para o novo botão Ver Imagem da Área */
     #goToImagePageButton {
         padding: 10px 20px;
@@ -158,9 +163,28 @@
         margin-top: 15px;
         color: #555;
     }
+       /* Estilos para o contêiner do gráfico de barras */
+#bar-chart-container {
+        display: none; /* Mantém oculto inicialmente */
+        width: 90%; /* Ajuste a largura conforme desejar */
+        max-width: 900px; /* Limite máximo de largura */
+        margin: 20px auto; /* Centraliza */
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        /* *************** ADIÇÃO IMPORTANTE AQUI *************** */
+        height: 550px; /* Altere esta linha */
+        /* OU, se preferir uma altura máxima: */
+        /* max-height: 600px; */
+    }
 
-
-
+    /* Estilos para o próprio canvas do gráfico */
+    #grafico-valvulas {
+        width: 100% !important; /* Garante que o canvas ocupe a largura total do contêiner */
+        height: 100% !important; /* Garante que o canvas ocupe a altura total do contêiner */
+        /* O !important é usado para tentar sobrescrever estilos de bibliotecas, se necessário */
+    }
      #search-graph-view .search-filters {
         display: flex;
         flex-wrap: wrap; /* Permite que os itens quebrem a linha */
@@ -288,8 +312,6 @@
 
   <div id="valve-view" class="view">
     <header class="valve-header">
-    <button id="theme-toggle" title="Alternar tema">🌓</button>
-
 
 
       <div id="user-display" class="user-info"></div>
@@ -378,9 +400,6 @@
     </div>
   </div>
 </div>
-
-
-
 <div id="graph-view" class="view">
     <h1>Opções de Gráfico</h1>
 
@@ -411,8 +430,6 @@
 
   <div id="statistics-view" class="view">
     <div class="top-bar">
-        <button id="btn-gerar-grafico">Gerar gráfico</button>
-
         <button onclick="showView('valve-view')">🔙 Voltar para válvulas</button>
         <h2>Estatísticas de Válvulas</h2>
         <select id="statistics-periodo-select"> <option value="7">Últimos 7 dias</option>
@@ -426,7 +443,6 @@
         <button class="area-button" data-area="Caixa">Caixa</button>
     </div>
 
-
     <div class="sides">
         <strong>Lado:</strong>
         <button class="side-btn" data-side="A">A</button>
@@ -434,7 +450,6 @@
         <button class="side-btn" data-side="C">C</button>
         <button class="side-btn" data-side="D">D</button>
     </div>
-        
 
     <h2 id="statistics-side-title">Selecione uma Válvula do Lado A</h2>
 
@@ -508,7 +523,7 @@
 </div>
 
 
-
+</div>  
 
 
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -727,7 +742,8 @@ async function gerarGrafico() {
       link.href = document.getElementById('grafico-sujeira-valvula').toDataURL('image/png');
       link.click();
     }
-        // FUNÇÃO AJUSTADA: showGraphOptions agora vai para a view do gráfico
+
+    // FUNÇÃO AJUSTADA: showGraphOptions agora vai para a view do gráfico
     function showGraphOptions() {
         showView('graph-view');
         // Você pode decidir se quer mostrar um gráfico padrão ao entrar na showGraphOptions
@@ -742,12 +758,6 @@ async function gerarGrafico() {
         // Assume que você quer carregar o Lado A da área atual (Raizer por padrão)
         selecionarLadoGrafico('A'); // Carrega o gráfico do Lado A por padrão
     }
-
-
-    // FUNÇÃO AJUSTADA: showGraphOptions agora vai para a view do gráfico
-
-    // FUNÇÃO AJUSTADA: showBarChart agora exibe o contêiner e carrega o gráfico
-
 
 
     // Adiciona listener para os botões de lado da visualização de válvulas (EXISTENTE)

@@ -56,10 +56,8 @@ async function handleValveSelection(valveName) {
 }
 
 async function generateValveDirtChart(valveName) {
-
   const canvas = document.getElementById('grafico-sujeira-valvula');
   if (!canvas) {
-
     console.error("Canvas 'grafico-sujeira-valvula' não encontrado!");
     return;
   }
@@ -123,7 +121,6 @@ async function generateValveDirtChart(valveName) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,
       plugins: {
         title: {
           display: true,
@@ -135,9 +132,8 @@ async function generateValveDirtChart(valveName) {
         y: {
           title: { display: true, text: 'Nota (1–5)' },
           beginAtZero: true,
-          min: 1,
           max: 5,
-          ticks: {stepSize: 1 }
+          ticks: { stepSize: 1 }
         }
       }
     }
@@ -184,61 +180,3 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inicializa a view
   initStatisticsView();
 });
-
-window.addEventListener('load', async () => {
-  const params = new URLSearchParams(window.location.search);
-  const lado = params.get('lado');
-  const area = params.get('area');
-  const valvula = params.get('valvula');
-  if (!lado || !area || !valvula) return;
-
-  const canvas = document.getElementById('grafico-sujeira-valvula');
-  const ctx = canvas.getContext('2d');
-
-  // 🔄 Busque os dados no Firestore exatamente como você já faz
-  const snapshot = await db.collection('registros')
-    .where('lado', '==', lado)
-    .where('area', '==', area)
-    .get();
-
-  const entries = [];
-  snapshot.forEach(doc => {
-    const data = doc.data();
-    if (data.valvulas && data.valvulas[valvula] !== undefined) {
-      entries.push({
-        data: data.data,
-        nota: Number(data.valvulas[valvula])
-      });
-    }
-  });
-
-  entries.sort((a,b) => new Date(a.data) - new Date(b.data));
-  const labels = entries.map(e => new Date(e.data).toLocaleDateString());
-  const dataPoints = entries.map(e => e.nota);
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: `Sujeira - ${valvula}`,
-        data: dataPoints,
-        borderColor: '#007bff',
-        backgroundColor: 'rgba(0,123,255,0.1)',
-        fill: true,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 5
-        }
-      }
-    }
-  });
-});
-

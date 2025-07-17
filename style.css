@@ -15,58 +15,22 @@ body {
   --success-color-darken: #3d9961; /* Cor escurecida para hover */
 }
 
-:root {
-  /* Fundo */
-  --bg-gradient: linear-gradient(135deg, #f3f6fd 0%, #e9e9f3 100%);
-  /* Texto */
-  --text-color: #232946;
-  /* Caixas e cards */
-  --box-bg: #ffffff;
-  /* Botões primários */
-  --primary: #7f53ac;
-  --primary-dark: #647dee;
-  /* Acento / detalhes */
-  --accent: #43e97b;
-  /* Inputs */
-  --input-bg: #f7f7fa;
-  --input-border: #e0e0e0;
-  /* Sombra */
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
-  /* Feedback */
-  --error-color: #e53e3e;
-  --success-color: #48bb78;
-}
-
+/* Tema Dark */
 body.dark {
-  /* Fundo */
   --bg-gradient: linear-gradient(135deg, #181c2f 0%, #232946 100%);
-  /* Texto */
   --text-color: #f3f6fd;
-  /* Caixas e cards */
   --box-bg: #232946;
-  /* Botões primários */
   --primary: #43e97b;
   --primary-dark: #38d39f;
-  /* Acento / detalhes */
   --accent: #7f53ac;
-  /* Inputs */
   --input-bg: #181c2f;
   --input-border: #393e5c;
-  /* Sombra */
-  --shadow: 0 8px 32px rgba(24, 28, 47, 0.25);
-  /* Feedback */
-  --error-color: #f56565;
-  --success-color: #48bb78;
+  --shadow: 0 8px 32px rgba(24,28,47,0.25);
+  --error-color: #f56565; /* Cor para o botão de reset no tema escuro */
+  --error-color-darken: #cc4d4d; /* Cor escurecida para hover */
+  --success-color: #68d391; /* Cor para o botão de confirmar no tema escuro */
+  --success-color-darken: #54ae76; /* Cor escurecida para hover */
 }
-
-/* Depois disso, o restante do seu CSS continua usando as variáveis:
-   background: var(--bg-gradient);
-   color: var(--text-color);
-   background-color: var(--box-bg);
-   border-color: var(--input-border);
-   box-shadow: var(--shadow);
-   etc. */
-
 
 /* Reset e fonte */
 * {
@@ -305,6 +269,22 @@ form button:hover {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Lados */
 .sides {
   display: flex;
@@ -503,12 +483,6 @@ form button:hover {
   transform: translateY(-2px);
 }
 
-#bar-chart-container {
-  background: var(--bg-gradient);
-  opacity: 100%;
-}
-
-
 /* Modals */
 .modal {
   display: none;
@@ -656,9 +630,6 @@ canvas#grafico-valvulas {
 }
 
 
-
-
-
 /* Media Queries */
 @media (max-width: 768px) {
   body {
@@ -705,7 +676,9 @@ canvas#grafico-valvulas {
     max-width: 300px;
   }
 
-
+  canvas#grafico-valvulas {
+    padding: 1rem;
+  }
 
   .valve-header {
     flex-direction: column;
@@ -817,8 +790,8 @@ canvas#grafico-valvulas {
 .chart-container {
   position: relative;
   width: 100%;
-  height: 700px;
-  background: rgb(23, 128, 233);
+  height: 500px;
+  background: #f8f9fa;
   border-radius: 12px;
   padding: 1rem;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
@@ -930,54 +903,17 @@ canvas[data-empty="true"]::after {
 
 
 @media (max-width: 768px) {
-  canvas#grafico-valvulas {
+  canvas#grafico-valvulas,
+  canvas#search-chart-canvas {
   width: 900px;                /* ocupa toda a largura da tela */
               /* garante que não ultrapasse o contêiner */
   max-height: 280px;                /* altura ajusta conforme o conteúdo */
-
-  margin: 1.5rem 0 0 0;  /* espaço acima */
+  aspect-ratio: 16 / 4;         /* largura maior que altura (achatado horizontalmente) */
+  display: block;
+  margin: 1.5rem auto 0 auto;  /* espaço acima */
               /* remove espaço interno se houver */
-
+  box-sizing: border-box;
   }
 
 
 }
-
-.chart-fullscreen-view {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  gap: 1rem;
-}
-
-.back-button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  background-color: var(--primary, #007bff);
-  color: white;
-  cursor: pointer;
-}
-
-
-#btn-gerar-grafico {
-  margin-top: 1rem;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  background-color: var(--primary, #007bff);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-#btn-gerar-grafico:hover {
-  background-color: var(--primary-dark, #0056b3);
-}
-
-
-
-

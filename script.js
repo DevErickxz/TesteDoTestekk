@@ -336,19 +336,6 @@ function updateActiveSideButtonValveView() {
   );
 }
 
-const themeToggle = document.getElementById('theme-toggle');
-function applyTheme(t) {
-  document.body.classList.toggle('dark', t==='dark');
-  localStorage.setItem('theme', t);
-}
-// Ao carregar a página
-applyTheme(localStorage.getItem('theme') || 'light');
-// Ao clicar no botão
-themeToggle.addEventListener('click', () => {
-  applyTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
-});
-
-
 // Evento inicial
 document.addEventListener('DOMContentLoaded', () => {
   // Referências
@@ -489,18 +476,10 @@ document.addEventListener('DOMContentLoaded', () => {
   atualizarSelectValvulasComBaseNaAreaELado();
 });
 
-document.getElementById('btn-gerar-grafico').addEventListener('click', () => {
-  const valve = currentselectedValve; // ou outro método para obter a válvula selecionada
-  if (!valve) {
-    alert('Selecione uma válvula primeiro!');
-    return;
-  }
 
-  const url = `statistics.html?lado=${currentSide}&area=${currentArea}&valvula=${encodeURIComponent(valve)}`;
-  window.location.href = url;
-});
-
-
-
-
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js')
+    .then(() => console.log('Service Worker registrado!'))
+    .catch(err => console.error('Erro ao registrar o Service Worker:', err));
+}
 
