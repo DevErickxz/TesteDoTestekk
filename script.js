@@ -1,7 +1,7 @@
 // script.js
 
 // CONFIG INICIAL
-
+console.log("iniciado")
 // Lista global de todas as válvulas, usada na view de votação
 const allValves = Array.from({ length: 48 }, (_, i) => `PL ${i + 1}`);
 
