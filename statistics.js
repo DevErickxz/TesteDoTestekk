@@ -22,6 +22,42 @@ async function initStatisticsView() {
   document.getElementById('statistics-periodo-select').value = '7';
 }
 
+async function renderStatisticsValves() {
+  const container = document.getElementById('valvulas-statistics-container');
+  container.innerHTML = '';
+  const valvesForSide = getValvesList(currentStatisticsArea, currentStatisticsSide);
+
+
+  document.getElementById('statistics-side-title').textContent =
+    `Selecione uma Válvula do Lado ${currentStatisticsSide} (${currentStatisticsArea})`;
+
+  valvesForSide.forEach(valveName => {
+    const div = document.createElement('div');
+    div.className = 'valvula-item';
+    div.textContent = valveName;
+    div.onclick = () => handleValveSelection(valveName);
+    if (currentSelectedValve === valveName) div.classList.add('selected');
+    container.appendChild(div);
+  });
+}
+
+async function handleValveSelection(valveName) {
+  currentSelectedValve = valveName;
+  document
+    .querySelectorAll('#valvulas-statistics-container .valvula-item')
+    .forEach(item => {
+      item.classList.toggle('selected', item.textContent === valveName);
+    });
+  document.getElementById('statistics-side-title').textContent =
+    `Gráfico de Sujeira para ${valveName} (Lado ${currentStatisticsSide}, ${currentStatisticsArea})`;
+
+  // Gera o gráfico **apenas aqui**, lendo o período selecionado
+  await generateValveDirtChart(valveName);
+}
+
+
+
+
 async function generateValveDirtChart(valveName) {
   const canvas = document.getElementById('grafico-sujeira-valvula');
   if (!canvas) {
