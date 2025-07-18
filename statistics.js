@@ -22,39 +22,6 @@ async function initStatisticsView() {
   document.getElementById('statistics-periodo-select').value = '7';
 }
 
-async function renderStatisticsValves() {
-  const container = document.getElementById('valvulas-statistics-container');
-  container.innerHTML = '';
-  const valvesForSide = getValvesList(currentStatisticsArea, currentStatisticsSide);
-
-
-  document.getElementById('statistics-side-title').textContent =
-    `Selecione uma Válvula do Lado ${currentStatisticsSide} (${currentStatisticsArea})`;
-
-  valvesForSide.forEach(valveName => {
-    const div = document.createElement('div');
-    div.className = 'valvula-item';
-    div.textContent = valveName;
-    div.onclick = () => handleValveSelection(valveName);
-    if (currentSelectedValve === valveName) div.classList.add('selected');
-    container.appendChild(div);
-  });
-}
-
-async function handleValveSelection(valveName) {
-  currentSelectedValve = valveName;
-  document
-    .querySelectorAll('#valvulas-statistics-container .valvula-item')
-    .forEach(item => {
-      item.classList.toggle('selected', item.textContent === valveName);
-    });
-  document.getElementById('statistics-side-title').textContent =
-    `Gráfico de Sujeira para ${valveName} (Lado ${currentStatisticsSide}, ${currentStatisticsArea})`;
-
-  // Gera o gráfico **apenas aqui**, lendo o período selecionado
-  await generateValveDirtChart(valveName);
-}
-
 async function generateValveDirtChart(valveName) {
   const canvas = document.getElementById('grafico-sujeira-valvula');
   if (!canvas) {
@@ -64,20 +31,23 @@ async function generateValveDirtChart(valveName) {
   const ctx = canvas.getContext('2d');
   if (statisticsChart) statisticsChart.destroy();
 
+  // Determina a chave correta no Firestore: "PL X" em vez de "Válvula X"
+  const dataKey = valveName.replace(/^Válvula\s*/, 'PL ').trim();
+
   // 1) Monta e executa a query
   const snapshot = await db.collection('registros')
     .where('lado', '==', currentStatisticsSide)
     .where('area', '==', currentStatisticsArea)
     .get();
 
-  // 2) Extrai somente as entradas da válvula
+  // 2) Extrai somente as entradas da válvula usando dataKey
   const allEntries = [];
   snapshot.forEach(doc => {
     const data = doc.data();
-    if (data.valvulas && data.valvulas[valveName] !== undefined) {
+    if (data.valvulas && data.valvulas[dataKey] !== undefined) {
       allEntries.push({
         data: data.data,  // string ISO
-        nota: Number(data.valvulas[valveName])
+        nota: Number(data.valvulas[dataKey])
       });
     }
   });
@@ -139,6 +109,7 @@ async function generateValveDirtChart(valveName) {
     }
   });
 }
+
 
 // Botões de LADO
 function updateStatisticsSideButtons() {
