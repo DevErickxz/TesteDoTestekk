@@ -629,6 +629,18 @@ canvas#grafico-valvulas {
   box-shadow: var(--shadow);
 }
 
+#grafico-sujeira-valvula{
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--box-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+
+}
+
 
 /* Media Queries */
 @media (max-width: 768px) {
@@ -787,14 +799,13 @@ canvas#grafico-valvulas {
 }
 
 /* Container do gráfico */
-.chart-container {
-  position: relative;
-  width: 100%;
-  height: 500px;
-  background: #f8f9fa;
+.chart-container { 
+  max-width: 1000px;
+  margin: 2rem auto;          /* centraliza horizontalmente */
+  padding: 1.5rem;
+  background: var(--box-bg);
   border-radius: 12px;
-  padding: 1rem;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow);
 }
 
 #search-chart-canvas {
