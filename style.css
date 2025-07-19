@@ -716,9 +716,9 @@ canvas#grafico-valvulas {
     font-size: 0.9rem; /* Smaller font size */
   }
   .valvula {
-    width: 90px;
-    height: 90px;
-    font-size: 1rem;
+    width: 70px;
+    height: 70px;
+    font-size: 0.17rem;
   }
   .valvula-label, .nota-label {
     font-size: 0.85rem;
