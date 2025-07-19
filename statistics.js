@@ -122,7 +122,7 @@ async function generateValveDirtChart(valveName) {
         borderColor: '#007bff',
         backgroundColor: 'rgba(0,123,255,0.1)',
         fill: true,
-        tension: 0.4
+        tension: 0.5
       }]
     },
     options: {
@@ -138,7 +138,7 @@ async function generateValveDirtChart(valveName) {
         y: {
           title: { display: true, text: 'Nota (1–5)' },
           beginAtZero: true,
-          max: 5,
+          max: 6,
           ticks: { stepSize: 1 }
         }
       }

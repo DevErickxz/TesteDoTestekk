@@ -355,8 +355,8 @@ form button:hover {
   width: 150px;
 }
 .valvula {
-  width: 120px;
-  height: 120px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   box-shadow: 0 8px 32px rgba(30,40,80,0.28);
   display: flex;
@@ -716,8 +716,8 @@ canvas#grafico-valvulas {
     font-size: 0.9rem; /* Smaller font size */
   }
   .valvula {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     font-size: 1rem;
   }
   .valvula-label, .nota-label {

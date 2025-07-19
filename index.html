@@ -317,13 +317,13 @@
   </div>
   <div class="input-group">
    
-    <input type="hidden" id="input-area" placeholder="Raizer" readonly>
+    <input type="hidden" id="input-area" placeholder="Raiser" readonly>
   </div>
 
 </div>
     <div class="area-buttons">
         <button class="area-button" data-area="Caixa">Ir para Caixa</button>
-        <button class="area-button" data-area="Raizer">Ir para Raizer</button>
+        <button class="area-button" data-area="Raiser">Ir para Raiser</button>
     </div>
 
     <div class="sides">
@@ -431,7 +431,7 @@
     </div>
 
     <div class="area-buttons">
-        <button class="area-button" data-area="Raizer">Raizer</button>
+        <button class="area-button" data-area="Raizer">Raiser</button>
         <button class="area-button" data-area="Caixa">Caixa</button>
     </div>
 
@@ -482,7 +482,7 @@
 
         <label for="search-area">Área:</label>
         <select id="search-area">
-            <option value="Raizer">Raizer</option>
+            <option value="Raizer">Raiser</option>
             <option value="Caixa">Caixa</option>
             <option value="all">Todas as Áreas</option>
         </select>
@@ -506,7 +506,7 @@
     <button class="back-button" onclick="showView('valve-view')">Voltar</button>
     <h2>Entrada de Pressão</h2>
     <div id="inputs-pressao">
-      <label for="inputRaizer">Pressão Raizer:</label>
+      <label for="inputRaizer">Pressão Raiser:</label>
       <input type="number" id="inputRaizer" placeholder="Ex: 50" step="0.01">
 
       <label for="inputCaixa">Pressão Caixa:</label>
@@ -542,7 +542,7 @@
 
     // Variáveis e funções relacionadas ao Chart.js (Gráfico de Barras)
     let ladoAtualGrafico = 'A';
-    let areaAtualGrafico = 'Raizer'; // Área padrão
+    let areaAtualGrafico = 'Raiser'; // Área padrão
     // Certifique-se de que o ID do seu canvas é 'grafico-valvulas'
     const ctx = document.getElementById('grafico-valvulas').getContext('2d');
     let grafico = null;
