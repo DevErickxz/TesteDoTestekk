@@ -381,10 +381,13 @@ form button:hover {
   border-radius: 8px; /* retira o círculo */
 }
 
+
+
 .valvula:hover {
   box-shadow: 0 16px 48px rgba(37,117,252,0.18);
-  transform: scale(1.08);
+  transform: scale(1.5);
 }
+
 .valvula-label {
   font-size: 1rem;
   color: #fff;
