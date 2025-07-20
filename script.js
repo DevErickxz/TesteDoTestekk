@@ -492,9 +492,19 @@ document.addEventListener('DOMContentLoaded', () => {
 const valvulaPositions = {
   Raizer: {
     A: {
-      "valvula-1": { top: 50, left: 100 },
-      "valvula-2": { top: 50, left: 220 },
-      "valvula-3": { top: 50, left: 340 },
+      "valvula-1": { top: 0, left: 50 },
+      "valvula-2": { top: 0, left: 150 },
+      "valvula-3": { top: 0, left: 250 },
+      "valvula-4": { top: 100, left: 50 },
+      "valvula-5": { top: 100, left: 150 },
+      "valvula-6": { top: 100, left: 250 },
+      "valvula-7": { top: 100, left: 350 },
+      "valvula-8": { top: 200, left: 50 },
+      "valvula-9": { top: 200, left: 150 },
+      "valvula-10": { top: 200, left: 250 },
+      "valvula-11": { top: 200, left: 350 },
+      "valvula-12": { top: 300, left: 150 },
+      "valvula-13": { top: 300, left: 350 }, 
       // ...
     },
     B: {
