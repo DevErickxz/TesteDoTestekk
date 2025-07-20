@@ -335,24 +335,18 @@ form button:hover {
 
 /* Container das válvulas */
 .container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjusted for responsiveness */
-  gap: 2rem 2.5rem;
-  justify-items: center;
-  align-items: start;
-  margin-bottom: 2rem;
-  max-width: 1000px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  position: relative;
+  width: 1000px;
+  height: 600px;
+  margin: 0 auto 2rem auto;
+  /* Remova grid-template-columns, gap, etc. */
+  /* max-width e width já estão ok */
 }
 
 /* Válvula */
 .valvula-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 150px;
+  position: absolute;
+  /* Remova display: flex, align-items, width, etc. */
 }
 .valvula {
   width: 90px;
@@ -719,8 +713,8 @@ canvas#grafico-valvulas {
     font-size: 0.9rem; /* Smaller font size */
   }
   .valvula {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     font-size: 0.17rem;
   }
   .valvula-label, .nota-label {

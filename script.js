@@ -24,6 +24,7 @@ const countsByArea = {
   'Caixa':  { A: 4,  B: 8,  C: 3,  D: 3  }
 };
 
+
 // Quais índices devem ficar quadrados (0‑based) por área→lado
 const squareIndices = {
   'Raizer': {
@@ -49,6 +50,10 @@ let userDisplay;
  * Retorna os nomes de válvulas contínuos para a área e lado informados,
  * baseando-se em countsByArea e no mapeamento global de 1 a 48.
  */
+
+
+
+
 function getValvesList(area, side) {
   const counts = countsByArea[area];
   if (!counts || !counts[side]) return [];
@@ -197,8 +202,16 @@ function renderValves() {
     const sqIdxs   = squareIndices[currentArea]?.[currentSide] || [];
     const isSquare = sqIdxs.includes(i);
 
+    // Busca a posição pelo nome da válvula (ex: "valvula-1")
+    const pos =
+      valvulaPositions[currentArea]?.[currentSide]?.[`valvula-${i + 1}`]
+      || { top: 0, left: 0 };
+
     const wrapper = document.createElement('div');
     wrapper.className = 'valvula-wrapper';
+    wrapper.style.position = 'absolute';
+    wrapper.style.top = pos.top + 'px';
+    wrapper.style.left = pos.left + 'px';
     wrapper.innerHTML = `
       <div class="valvula nota-${nota}${isSquare ? ' square' : ''}">
         <div class="valvula-label">${nome}</div>
@@ -474,6 +487,69 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // popula na carga, sem precisar clicar
   atualizarSelectValvulasComBaseNaAreaELado();
+});
+
+const valvulaPositions = {
+  Raizer: {
+    A: {
+      "valvula-1": { top: 50, left: 100 },
+      "valvula-2": { top: 50, left: 220 },
+      "valvula-3": { top: 50, left: 340 },
+      // ...
+    },
+    B: {
+      "valvula-1": { top: 120, left: 100 },
+      // ...
+    },
+    // C, D...
+  },
+Caixa: {
+  A: {
+    "valvula-1": { top: 0, left: 150 },
+    "valvula-2": { top: 120, left: 150 },
+    "valvula-3": { top: 240, left: 150 },
+    "valvula-4": { top: 360, left: 150 },
+  },
+  B: {
+    "valvula-1": { top: 0,   left: 0 },
+    "valvula-2": { top: 0,   left: 90 },
+    "valvula-3": { top: 0,   left: 180 },
+    "valvula-4": { top: 0,   left: 270 },
+    "valvula-5": { top: 120, left: 0 },
+    "valvula-6": { top: 120, left: 90 },
+    "valvula-7": { top: 120, left: 180 },
+    "valvula-8": { top: 120, left: 270 }
+  },
+  C:{
+    "valvula-1": { top: 0, left: 150 },
+    "valvula-2": { top: 120, left: 150 },
+    "valvula-3": { top: 240, left: 150 },
+  },
+  D:{
+    "valvula-1": { top: 0, left: 150 },
+    "valvula-2": { top: 120, left: 150 },
+    "valvula-3": { top: 240, left: 150 },
+  },
+  //
+  // C, D...
+}
+};
+
+container = document.getElementById('valvulas-container');
+
+Object.entries(countsByArea).forEach(([area, lados]) => {
+  Object.entries(lados).forEach(([lado, count]) => {
+    for (let i = 1; i <= count; i++) {
+      const key = `${area}-${lado}-${i}`;
+      const pos = valvulaPositions[key] || { top: 0, left: 0 };
+      const wrapper = document.createElement('div');
+      wrapper.className = `valvula-wrapper valvula-${area.toLowerCase()}-${lado.toLowerCase()}${i}`;
+      wrapper.style.top = pos.top + 'px';
+      wrapper.style.left = pos.left + 'px';
+      wrapper.innerHTML = `<div class="valvula">${area} ${lado}${i}</div>`;
+      container.appendChild(wrapper);
+    }
+  });
 });
 
 
