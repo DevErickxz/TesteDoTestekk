@@ -20,7 +20,7 @@ const confirmadas = {
 
 // Mapeamento de quantidades por área e lado
 const countsByArea = {
-  'Raizer': { A: 13, B: 3,  C: 12, D: 5  },
+  'Raizer': { A: 13, B: 3,  C: 12, D: 4  },
   'Caixa':  { A: 4,  B: 8,  C: 3,  D: 3  }
 };
 
@@ -28,13 +28,13 @@ const countsByArea = {
 // Quais índices devem ficar quadrados (0‑based) por área→lado
 const squareIndices = {
   'Raizer': {
-    C: [1],
-    D: [2]  // Apenas a Válvula 11 (índice 10) de Raizer C
+    C: [10],
+            // Apenas a Válvula 11 (índice 10) de Raizer C
   },
   'Caixa': {
     // AGORA, 'A' e 'B' estão juntos dentro da mesma chave 'Caixa'
     B: [0, 4], // Válvula 5 (índice 4) e Válvula 10 (índice 9) de Caixa B
-    A: [2]    // Válvula 3 (índice 2) de Caixa A
+    A: [1]    // Válvula 3 (índice 2) de Caixa A
   }
 };
 
@@ -508,9 +508,31 @@ const valvulaPositions = {
       // ...
     },
     B: {
-      "valvula-1": { top: 120, left: 100 },
+    "valvula-1": { top: 0, left: 150 },
+    "valvula-2": { top: 120, left: 150 },
+    "valvula-3": { top: 240, left: 150 },
       // ...
     },
+    C:{
+      "valvula-1": {top:0, left: 150},
+      "valvula-2": {top:100, left: 50},
+      "valvula-3": {top:100, left: 120},
+      "valvula-4": {top:100, left: 190},
+      "valvula-5": {top:200, left: 50},
+      "valvula-6": {top:200, left: 120},
+      "valvula-7": {top:200, left: 190},
+      "valvula-8": {top:200, left: 260},
+      "valvula-9": {top:300, left: 50},
+      "valvula-10": {top:300, left: 260},
+      "valvula-11": {top:400, left: 170},
+      "valvula-12": {top:400, left: 260},
+    },
+    D:{
+      "valvula-1": {top:0, left: 260},
+      "valvula-2": {top:100, left: 260},
+      "valvula-3": {top:200, left: 50},
+      "valvula-4": {top:200, left: 260},
+    }
     // C, D...
   },
 Caixa: {
