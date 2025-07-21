@@ -535,12 +535,15 @@ const valvulaPositions = {
     }
     // C, D...
   },
+
+
+
 Caixa: {
   A: {
-    "valvula-1": { top: 0, left: 150 },
-    "valvula-2": { top: 120, left: 150 },
-    "valvula-3": { top: 240, left: 150 },
-    "valvula-4": { top: 360, left: 150 },
+    "valvula-1": { top: 0, left: 120 },
+    "valvula-2": { top: 120, left: 120 },
+    "valvula-3": { top: 240, left: 120 },
+    "valvula-4": { top: 360, left: 120 },
   },
   B: {
     "valvula-1": { top: 0,   left: 0 },
