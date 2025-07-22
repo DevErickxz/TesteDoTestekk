@@ -508,8 +508,8 @@ const valvulaPositions = {
       // ...
     },
     B: {
-    "valvula-1": { top: 0, left: 100 },
-    "valvula-2": { top: 120, left: 100 },
+    "valvula-1": { top: 0, left: 170 },
+    "valvula-2": { top: 120, left: 170 },
     "valvula-3": { top: 240, left: 100 },
       // ...
     },
@@ -540,10 +540,10 @@ const valvulaPositions = {
 
 Caixa: {
   A: {
-    "valvula-1": { top: 0, left: 100 },
-    "valvula-2": { top: 120, left: 100 },
-    "valvula-3": { top: 240, left: 100 },
-    "valvula-4": { top: 360, left: 100 },
+    "valvula-1": { top: 0, left: 0 },
+    "valvula-2": { top: 120, left: 0 },
+    "valvula-3": { top: 240, left: 0 },
+    "valvula-4": { top: 360, left: 0 },
   },
   B: {
     "valvula-1": { top: 0,   left: 50 },
@@ -556,14 +556,14 @@ Caixa: {
     "valvula-8": { top: 250, left: 210 },
   },
   C:{
-    "valvula-1": { top: 0, left: 100 },
-    "valvula-2": { top: 120, left: 100 },
-    "valvula-3": { top: 240, left: 100 },
+    "valvula-1": { top: 0, left: 0 },
+    "valvula-2": { top: 120, left: 0 },
+    "valvula-3": { top: 240, left: 0 },
   },
   D:{
-    "valvula-1": { top: 0, left: 100 },
-    "valvula-2": { top: 120, left: 100 },
-    "valvula-3": { top: 240, left: 100 },
+    "valvula-1": { top: 0, left: 0 },
+    "valvula-2": { top: 120, left: 0 },
+    "valvula-3": { top: 240, left: 0 },
   },
   //
   // C, D...
