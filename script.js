@@ -33,7 +33,7 @@ const squareIndices = {
   },
   'Caixa': {
     // AGORA, 'A' e 'B' estão juntos dentro da mesma chave 'Caixa'
-    B: [0, 4], // Válvula 5 (índice 4) e Válvula 10 (índice 9) de Caixa B
+    B: [7, 4], // Válvula 5 (índice 4) e Válvula 10 (índice 9) de Caixa B
     A: [1]    // Válvula 3 (índice 2) de Caixa A
   }
 };
@@ -548,12 +548,12 @@ Caixa: {
   B: {
     "valvula-1": { top: 0,   left: 50 },
     "valvula-2": { top: 100, left: 50 },
-    "valvula-3": { top: 170,   left: 20 },
-    "valvula-4": { top: 250, left: 0 },
-    "valvula-5": { top: 250, left: 70 },
+    "valvula-3": { top: 200,   left: 20 },
+    "valvula-4": { top: 300, left: 0 },
+    "valvula-5": { top: 300, left: 70 },
     "valvula-6": { top: 100, left: 140 },
-    "valvula-7": { top: 250, left: 140 },
-    "valvula-8": { top: 250, left: 210 },
+    "valvula-7": { top: 300, left: 140 },
+    "valvula-8": { top: 300, left: 210 },
   },
   C:{
     "valvula-1": { top: 0, left: 0 },
