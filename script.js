@@ -546,14 +546,14 @@ Caixa: {
     "valvula-4": { top: 360, left: 100 },
   },
   B: {
-    "valvula-1": { top: 0,   left: 0 },
-    "valvula-2": { top: 0,   left: 70 },
-    "valvula-3": { top: 0,   left: 140 },
-    "valvula-4": { top: 0,   left: 210 },
-    "valvula-5": { top: 120, left: 0 },
-    "valvula-6": { top: 120, left: 70 },
-    "valvula-7": { top: 120, left: 140 },
-    "valvula-8": { top: 120, left: 210 }
+    "valvula-1": { top: 0,   left: 50 },
+    "valvula-2": { top: 100, left: 50 },
+    "valvula-3": { top: 170,   left: 20 },
+    "valvula-4": { top: 250, left: 0 },
+    "valvula-5": { top: 250, left: 70 },
+    "valvula-6": { top: 100, left: 140 },
+    "valvula-7": { top: 250, left: 140 },
+    "valvula-8": { top: 250, left: 210 },
   },
   C:{
     "valvula-1": { top: 0, left: 100 },
