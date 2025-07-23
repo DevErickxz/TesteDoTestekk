@@ -175,6 +175,7 @@ function initValves() {
     confirmadas[currentArea][currentSide][i] = true;
   }
 
+  ajustarAlturaContainer()
   renderValves();
   bindListeners();
   updateActiveAreaButtonValveView();
@@ -586,6 +587,31 @@ Object.entries(countsByArea).forEach(([area, lados]) => {
     }
   });
 });
+
+function ajustarAlturaContainer() {
+  if (currentArea === 'Caixa' && currentSide === 'A') {
+    container.style.height = '400px';
+  } else if (currentArea === 'Caixa' && currentSide === 'B') {
+    container.style.height = '350px';
+  } else if (currentArea === 'Caixa' && currentSide === 'C') {
+    container.style.height = '300px';
+  } else if (currentArea === 'Caixa' && currentSide === 'D') {
+    container.style.height = '300px';
+  } else if (currentArea === 'Raizer' && currentSide === 'A') {
+    container.style.height = '350px';
+  } else if (currentArea === 'Raizer' && currentSide === 'B') {
+    container.style.height = '300px';
+  } else if (currentArea === 'Raizer' && currentSide === 'C') {
+    container.style.height = '500px';
+  } else if (currentArea === 'Raizer' && currentSide === 'D') {
+    container.style.height = '280px';
+  } else {
+    container.style.height = 'auto';
+  }
+}
+
+// Sempre que trocar de lado ou área, chame:
+ajustarAlturaContainer();
 
 
 

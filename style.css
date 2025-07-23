@@ -332,7 +332,13 @@ form button:hover {
   letter-spacing: 1px;
   font-weight: 700;
 }
-
+@media (max-width: 480px) {
+  .container {
+    height: auto;
+    margin-bottom: 4rem; /* Espaço extra abaixo das válvulas */
+    padding-bottom: 2rem; /* Espaço interno extra */
+  }
+}
 /* Container das válvulas */
 .container {
   position: relative;
