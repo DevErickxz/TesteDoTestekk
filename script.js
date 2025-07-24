@@ -321,20 +321,21 @@ async function mostrarResumo() {
   if (media >= 2.6 && media <= 4.5) intensidade = 'Média';
   else if (media > 4.5) intensidade = 'Intensa';
 
-  // Novo resumo só com dados principais
-  const resumoHTML = `
-    <div class="dashboard-resumo">
-      <div class="registro-topo">
+const corClasse =
+  intensidade === 'Suave'   ? 'intensidade-suave'
+: intensidade === 'Média'   ? 'intensidade-media'
+:                            'intensidade-intensa';
 
-        <h2>Registro concluído!</h2>
-      </div>
-      <p><strong>Usuário:</strong> ${userName}</p>
-      <p><strong>Data/Hora:</strong> ${new Date(timestamp).toLocaleString()}</p>
-      <hr>
-      <p><strong>Intensidade:</strong> ${intensidade}</p>
-      <p><strong>Nota da intensidade:</strong> ${media.toFixed(2)}</p>
-    </div>
-  `;
+const resumoHTML = `
+  <div class="dashboard-resumo">
+
+    <p><strong>Usuário:</strong> ${userName}</p>
+    <p><strong>Data/Hora:</strong> ${new Date(timestamp).toLocaleString()}</p>
+    <hr>
+    <div class="intensidade-label">Intensidade: ${intensidade}</div>
+    <div class="intensidade-bola ${corClasse}"></div>
+  </div>
+`;
 
   // Salva no DB (mantendo todas as válvulas, mas só mostra resumo simples)
   let registroData = {
