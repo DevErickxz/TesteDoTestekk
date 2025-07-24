@@ -60,46 +60,46 @@ async function handleValveSelection(valveName) {
 
 async function generateValveDirtChart(valveName) {
   const canvas = document.getElementById('grafico-sujeira-valvula');
-  if (!canvas) {
-    console.error("Canvas 'grafico-sujeira-valvula' não encontrado!");
-    return;
-  }
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   if (statisticsChart) statisticsChart.destroy();
 
-  // Determina a chave correta no Firestore: "PL X" em vez de "Válvula X"
+  // Determina a chave correta no Firestore: "PL X"
   const dataKey = valveName.replace(/^Válvula\s*/, 'PL ').trim();
 
-  // 1) Monta e executa a query
-  const snapshot = await db.collection('registros')
-    .where('lado', '==', currentStatisticsSide)
-    .where('area', '==', currentStatisticsArea)
-    .get();
+  // Busca todos os registros (agora cada registro tem todos os lados/áreas)
+  const snapshot = await db.collection('registros').get();
 
-  // 2) Extrai somente as entradas da válvula usando dataKey
+  // Extrai as entradas da válvula no lado e área selecionados
   const allEntries = [];
   snapshot.forEach(doc => {
     const data = doc.data();
-    if (data.valvulas && data.valvulas[dataKey] !== undefined) {
+    // Exemplo: currentStatisticsArea = 'Caixa', currentStatisticsSide = 'A'
+    if (
+      data.valvulas &&
+      data.valvulas[currentStatisticsArea] &&
+      data.valvulas[currentStatisticsArea][currentStatisticsSide] &&
+      data.valvulas[currentStatisticsArea][currentStatisticsSide][dataKey] !== undefined
+    ) {
       allEntries.push({
         data: data.data,  // string ISO
-        nota: Number(data.valvulas[dataKey])
+        nota: Number(data.valvulas[currentStatisticsArea][currentStatisticsSide][dataKey])
       });
     }
   });
 
-  // 3) Filtra pelo período atual
-  const dias = document.getElementById('statistics-periodo-select').value;  // '7','30' ou 'all'
+  // Filtra pelo período atual
+  const dias = document.getElementById('statistics-periodo-select').value;
   let entries = allEntries;
   if (dias !== 'all') {
     const limite = Date.now() - parseInt(dias,10) * 86400000;
     entries = entries.filter(e => new Date(e.data).getTime() >= limite);
   }
 
-  // 4) Ordena por data
+  // Ordena por data
   entries.sort((a,b) => new Date(a.data) - new Date(b.data));
 
-  // 5) Prepara arrays para o Chart
+  // Prepara arrays para o Chart
   const labels = entries.map(e => {
     const d = new Date(e.data);
     return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}`;
@@ -111,7 +111,7 @@ async function generateValveDirtChart(valveName) {
   const finalLabels = hasData ? labels : ['Sem dados'];
   const finalData   = hasData ? dataPoints : [0];
 
-  // 6) Cria o gráfico
+  // Cria o gráfico
   statisticsChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -136,7 +136,7 @@ async function generateValveDirtChart(valveName) {
       scales: {
         x: { title: { display: true, text: 'Data' } },
         y: {
-          title: { display: true, text: 'Nota (1–5)' },
+          title: { display: true, text: 'Nota (0–5)' },
           beginAtZero: true,
           max: 6,
           ticks: { stepSize: 1 }

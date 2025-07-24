@@ -931,3 +931,34 @@ canvas[data-empty="true"]::after {
 
 
 }
+
+/* Dashboard Resumo */
+.dashboard-resumo {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 2rem;
+  margin: 1rem auto;
+  max-width: 400px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+.dashboard-resumo h2 {
+  color: #6c3fc7;
+  margin-bottom: 1rem;
+}
+.dashboard-lado h3 {
+  margin: 1rem 0 0.5rem 0;
+  color: #3a2a7c;
+}
+.dashboard-lado ul {
+  list-style: none;
+  padding: 0;
+}
+.dashboard-lado li {
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+}
+.grau {
+  font-weight: bold;
+  color: #3a2a7c;
+}
