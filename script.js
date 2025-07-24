@@ -295,70 +295,58 @@ async function mostrarResumo() {
   const userDoc = await db.collection('users').doc(user.uid).get();
   const userName = userDoc.data()?.nome || 'Desconhecido';
 
+  // Calcula intensidade e média como antes
   let somaNotas = 0;
   let qtdVotadas = 0;
-  let registroData = {
-    userId: user.uid,
-    userName,
-    data: timestamp,
-    pressaoRaizer: pressaoRaizer || null,
-    pressaoCaixa: pressaoCaixa || null,
-    valvulas: {
-      Raizer: {},
-      Caixa: {}
-    }
-  };
-
-  let resumoHTML = `
-    <div class="dashboard-resumo">
-      <h2>Registro de Válvulas</h2>
-      <p><strong>Usuário:</strong> ${userName}</p>
-      <p><strong>Data/Hora:</strong> ${new Date(timestamp).toLocaleString()}</p>
-      <hr>
-  `;
-
-  // Para cada área e lado, monta o resumo e salva no objeto
   ['Raizer', 'Caixa'].forEach(area => {
-    resumoHTML += `<h3>Área ${area}</h3>`;
     Object.keys(countsByArea[area]).forEach(lado => {
-      resumoHTML += `<div class="dashboard-lado"><h4>Lado ${lado}</h4><ul>`;
       const count = countsByArea[area][lado];
       const start = (() => {
         const counts = countsByArea[area];
         const offs = { A:0, B:counts.A, C:counts.A+counts.B, D:counts.A+counts.B+counts.C };
         return offs[lado];
       })();
-
-      if (!registroData.valvulas[area][lado]) registroData.valvulas[area][lado] = {};
       for (let i = 0; i < count; i++) {
-        const nome = allValves[start + i];
         const nota = votos[area][lado][i] ?? 0;
-        resumoHTML += `<li>${nome}: <span class="grau">${nota}</span></li>`;
-        registroData.valvulas[area][lado][nome] = nota;
         if (nota > 0) {
           somaNotas += nota;
           qtdVotadas++;
         }
       }
-      resumoHTML += `</ul></div>`;
     });
   });
 
-  // Calcule a média e intensidade após somar as notas
   const media = qtdVotadas > 0 ? (somaNotas / qtdVotadas) : 0;
   let intensidade = 'Suave';
   if (media >= 2.6 && media <= 4.5) intensidade = 'Média';
   else if (media > 4.5) intensidade = 'Intensa';
 
-  resumoHTML += `
-    <hr>
-    <p><strong>Intensidade:</strong> ${intensidade}</p>
-    <p><strong>Nota da intensidade:</strong> ${media.toFixed(2)}</p>
+  // Novo resumo só com dados principais
+  const resumoHTML = `
+    <div class="dashboard-resumo">
+      <div class="registro-topo">
+
+        <h2>Registro concluído!</h2>
+      </div>
+      <p><strong>Usuário:</strong> ${userName}</p>
+      <p><strong>Data/Hora:</strong> ${new Date(timestamp).toLocaleString()}</p>
+      <hr>
+      <p><strong>Intensidade:</strong> ${intensidade}</p>
+      <p><strong>Nota da intensidade:</strong> ${media.toFixed(2)}</p>
     </div>
   `;
 
-  registroData.intensidade = intensidade;
-  registroData.notaIntensidade = media;
+  // Salva no DB (mantendo todas as válvulas, mas só mostra resumo simples)
+  let registroData = {
+    userId: user.uid,
+    userName,
+    data: timestamp,
+    pressaoRaizer: pressaoRaizer || null,
+    pressaoCaixa: pressaoCaixa || null,
+    intensidade,
+    notaIntensidade: media,
+    valvulas: {} // pode manter ou remover, conforme sua lógica
+  };
 
   try {
     await db.collection('registros').add(registroData);
