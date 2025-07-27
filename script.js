@@ -280,17 +280,46 @@ function bindListeners() {
   };
   btnNaoConfirmar.onclick = () => modalConfirmar.classList.remove('show');
 
-  btnFecharResumo.onclick = () => modalResumo.classList.remove('show');
-  btnDownload.onclick = () => {
-    const blob = new Blob([resumoTextModal.textContent], { type: 'text/plain' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `resumo_valvulas_${new Date().toISOString().slice(0,10)}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
+btnDownload.onclick = () => {
+  const container = document.getElementById('resumo-imagem-container');
+  const user = firebase.auth().currentUser;
+  const nome = resumoTextModal.querySelector('p strong')?.nextSibling?.textContent?.trim() || 'Usuário';
+  const data = new Date().toLocaleString();
+
+  const caixa = resumoTextModal.querySelectorAll('.dashboard-resumo')[0];
+  const raizer = resumoTextModal.querySelectorAll('.dashboard-resumo')[1];
+
+  container.innerHTML = `
+    <div style="
+      font-family: 'Poppins', sans-serif;
+      background: white;
+      padding: 30px;
+      color: #333;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      width: 400px;
+    ">
+      <h2 style="text-align: center; margin-bottom: 20px;">Resumo de Sujeira</h2>
+      <p><strong>Usuário:</strong> ${nome}</p>
+      <p><strong>Data:</strong> ${data}</p>
+      <hr style="margin: 15px 0;">
+      ${caixa?.outerHTML || ''}
+      ${raizer?.outerHTML || ''}
+    </div>
+  `;
+
+  html2canvas(container.firstElementChild).then(canvas => {
+    const link = document.createElement('a');
+    link.download = `resumo_valvulas_${new Date().toISOString().slice(0,10)}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(err => {
+    console.error('Erro ao gerar imagem:', err);
+    alert('Erro ao gerar imagem do resumo.');
+  });
+};
 }
+
 
 // Gera e salva o resumo no Firestore
 async function mostrarResumo() {
@@ -309,10 +338,13 @@ async function mostrarResumo() {
     let soma = 0;
     let qtd = 0;
 
-    Object.keys(countsByArea[area]).forEach(lado => {
-      const total = countsByArea[area][lado];
+    const lados = countsByArea[area];
+    if (!lados) return; // previne erro se a área estiver incorreta
+
+    Object.keys(lados).forEach(lado => {
+      const total = lados[lado];
       for (let i = 0; i < total; i++) {
-        const nota = votos[area][lado][i] ?? 0;
+        const nota = votos[area]?.[lado]?.[i] ?? 0;
         if (nota > 0) {
           soma += nota;
           qtd++;
@@ -328,11 +360,25 @@ async function mostrarResumo() {
     intensidades[area] = { media, intensidade };
   });
 
-  const gerarBlocoResumo = (area, intensidade, classe) => `
+  // Gera HTML com média dentro da bolinha
+  const gerarBlocoResumo = (area, intensidade, classe, media) => `
     <div class="dashboard-resumo" style="margin-bottom: 2rem;">
       <p><strong>Área:</strong> ${area}</p>
       <p><strong>Intensidade:</strong> ${intensidade}</p>
-      <div class="intensidade-bola ${classe}" style="margin: 10px auto;"></div>
+      <div class="intensidade-bola ${classe}" style="
+        margin: 10px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+        font-size: 1.1rem;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+      ">
+        ${media.toFixed(1)}
+      </div>
     </div>
   `;
 
@@ -341,23 +387,24 @@ async function mostrarResumo() {
     <p><strong>Data/Hora:</strong> ${new Date(timestamp).toLocaleString()}</p>
     <hr>
     ${['Caixa', 'Raizer'].map(area => {
-      const { intensidade } = intensidades[area];
+      const { intensidade, media } = intensidades[area] || {};
       const corClasse =
         intensidade === 'Suave' ? 'intensidade-suave' :
         intensidade === 'Média' ? 'intensidade-media' :
-        'intensidade-intensa';
+        intensidade === 'Intensa' ? 'intensidade-intensa' :
+        '';
 
-      return gerarBlocoResumo(area, intensidade, corClasse);
+      return gerarBlocoResumo(area, intensidade || 'Desconhecida', corClasse, media || 0);
     }).join('')}
   `;
 
-  // Opcional: salvar também no banco, só a intensidade geral combinada
-  const mediaGlobal = (() => {
-    const raizer = intensidades['Raizer'].media;
-    const caixa = intensidades['Caixa'].media;
-    const total = [raizer, caixa].filter(m => m > 0);
-    return total.length > 0 ? (raizer + caixa) / total.length : 0;
-  })();
+  // Média geral para salvar no Firestore
+  const raizerMedia = intensidades['Raizer']?.media ?? 0;
+  const caixaMedia = intensidades['Caixa']?.media ?? 0;
+  const mediasValidas = [raizerMedia, caixaMedia].filter(m => m > 0);
+  const mediaGlobal = mediasValidas.length > 0
+    ? mediasValidas.reduce((a, b) => a + b, 0) / mediasValidas.length
+    : 0;
 
   let intensidadeGlobal = 'Suave';
   if (mediaGlobal >= 2.6 && mediaGlobal <= 4.5) intensidadeGlobal = 'Média';
@@ -371,7 +418,7 @@ async function mostrarResumo() {
     pressaoCaixa: pressaoCaixa || null,
     intensidade: intensidadeGlobal,
     notaIntensidade: mediaGlobal,
-    valvulas: {} // você pode adicionar votos aqui se quiser salvar detalhado
+    valvulas: {} // opcional: você pode adicionar votos detalhados aqui
   };
 
   try {
@@ -381,9 +428,10 @@ async function mostrarResumo() {
     modalResumo.classList.add('show');
   } catch (error) {
     console.error('Erro ao salvar registro:', error);
-    alert('Erro ao salvar registro: ' + error.message);
+    alert('Erro ao salvar registro. Verifique o console.');
   }
 }
+
 
 
 // Atualiza highlight dos botões de área e lado
@@ -463,6 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Botões área/ lado (view válvulas)
   areaBtns.forEach(btn => btn.onclick = () => {
     currentArea = btn.dataset.area;
+    currentSide = 'A'; // Reseta lado para A ao trocar de área
     localStorage.setItem('savedArea', currentArea);
     initValves();
   });
