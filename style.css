@@ -981,3 +981,8 @@ canvas[data-empty="true"]::after {
     height: 60px;
   }
 }
+
+.intensidade-zero {
+  background-color: #000; /* preto */
+  color: #fff;
+}

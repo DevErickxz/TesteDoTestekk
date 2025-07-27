@@ -277,9 +277,9 @@ function bindListeners() {
   btnSimConfirmar.onclick = async () => {
     modalConfirmar.classList.remove('show');
     await mostrarResumo();
-  };
+};
   btnNaoConfirmar.onclick = () => modalConfirmar.classList.remove('show');
-
+  btnFecharResumo.onclick = () => modalResumo.classList.remove('show');
 btnDownload.onclick = () => {
   const container = document.getElementById('resumo-imagem-container');
   const user = firebase.auth().currentUser;
@@ -318,6 +318,16 @@ btnDownload.onclick = () => {
     alert('Erro ao gerar imagem do resumo.');
   });
 };
+}
+
+function getOffset(area, lado) {
+  const counts = countsByArea[area];
+  return {
+    A: 0,
+    B: counts.A,
+    C: counts.A + counts.B,
+    D: counts.A + counts.B + counts.C
+  }[lado];
 }
 
 
@@ -389,11 +399,11 @@ async function mostrarResumo() {
     ${['Caixa', 'Raizer'].map(area => {
       const { intensidade, media } = intensidades[area] || {};
       const corClasse =
+        media === 0 ? 'intensidade-zero' :
         intensidade === 'Suave' ? 'intensidade-suave' :
         intensidade === 'Média' ? 'intensidade-media' :
         intensidade === 'Intensa' ? 'intensidade-intensa' :
-        '';
-
+      '';
       return gerarBlocoResumo(area, intensidade || 'Desconhecida', corClasse, media || 0);
     }).join('')}
   `;
@@ -410,6 +420,25 @@ async function mostrarResumo() {
   if (mediaGlobal >= 2.6 && mediaGlobal <= 4.5) intensidadeGlobal = 'Média';
   else if (mediaGlobal > 4.5) intensidadeGlobal = 'Intensa';
 
+  // MONTA a estrutura de válvulas por área > lado > PL X
+  const valvulasParaSalvar = {
+    Raizer: { A: {}, B: {}, C: {}, D: {} },
+    Caixa:  { A: {}, B: {}, C: {}, D: {} }
+  };
+
+  ['Raizer', 'Caixa'].forEach(area => {
+    Object.keys(countsByArea[area]).forEach(lado => {
+      const total = countsByArea[area][lado];
+      const offset = getOffset(area, lado); // usa o mesmo cálculo dos nomes PL X
+
+      for (let i = 0; i < total; i++) {
+        const nota = votos[area]?.[lado]?.[i] ?? 0;
+        const plName = `PL ${offset + i + 1}`;
+        valvulasParaSalvar[area][lado][plName] = nota;
+      }
+    });
+  });
+
   const registroData = {
     userId: user.uid,
     userName,
@@ -417,8 +446,8 @@ async function mostrarResumo() {
     pressaoRaizer: pressaoRaizer || null,
     pressaoCaixa: pressaoCaixa || null,
     intensidade: intensidadeGlobal,
-    notaIntensidade: mediaGlobal,
-    valvulas: {} // opcional: você pode adicionar votos detalhados aqui
+    notaIntensidade: Number(mediaGlobal.toFixed(1)),
+    valvulas: valvulasParaSalvar
   };
 
   try {
@@ -428,9 +457,10 @@ async function mostrarResumo() {
     modalResumo.classList.add('show');
   } catch (error) {
     console.error('Erro ao salvar registro:', error);
-    alert('Erro ao salvar registro. Verifique o console.');
+    alert('Erro ao salvar registro: ' + error.message);
   }
 }
+
 
 
 
