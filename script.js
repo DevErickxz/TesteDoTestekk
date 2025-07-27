@@ -306,25 +306,25 @@ btnDownload.onclick = () => {
   const nome = resumoTextModal.querySelector('p strong')?.nextSibling?.textContent?.trim() || 'Usuário';
   const data = new Date().toLocaleString();
 
-  const caixa = resumoTextModal.querySelectorAll('.dashboard-resumo')[0];
-  const raizer = resumoTextModal.querySelectorAll('.dashboard-resumo')[1];
+  // Pega todos os blocos de resumo, inclusive Global
+  const blocosResumo = resumoTextModal.querySelectorAll('.dashboard-resumo');
+  const blocosHTML = Array.from(blocosResumo).map(bloco => bloco.outerHTML).join('');
 
   container.innerHTML = `
     <div style="
       font-family: 'Poppins', sans-serif;
       background: white;
-      padding: 30px;
+      padding: 75px;
       color: #333;
       border: 1px solid #ddd;
       border-radius: 10px;
       width: 400px;
     ">
-      <h2 style="text-align: center; margin-bottom: 20px;">Resumo de Sujeira</h2>
+      <h2 style="text-align: center; margin-bottom: 20px;">Resumo de Limpeza</h2>
       <p><strong>Usuário:</strong> ${nome}</p>
       <p><strong>Data:</strong> ${data}</p>
-      <hr style="margin: 15px 0;">
-      ${caixa?.outerHTML || ''}
-      ${raizer?.outerHTML || ''}
+      <hr style="margin: 60px 0;">
+      ${blocosHTML}
     </div>
   `;
 
@@ -338,6 +338,7 @@ btnDownload.onclick = () => {
     alert('Erro ao gerar imagem do resumo.');
   });
 };
+
 }
 
 function getOffset(area, lado) {

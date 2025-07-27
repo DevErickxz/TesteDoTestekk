@@ -557,7 +557,7 @@ form button:hover {
   white-space: normal !important;
   text-align: center;
   background: var(--input-bg);
-  padding: 1rem;
+  padding: 3.3rem;
   border-radius: 8px;
   font-family: monospace;
   font-size: 0.9rem;

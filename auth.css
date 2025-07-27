@@ -234,7 +234,7 @@ body {
 
 /* Resumo */
 .resumo-text {
-  text-align: left;
+  text-align: center;
   white-space: pre-wrap;
   margin-bottom: 1rem;
 }
