@@ -369,7 +369,7 @@ async function mostrarResumo() {
     let qtd = 0;
 
     const lados = countsByArea[area];
-    if (!lados) return; // previne erro se a área estiver incorreta
+    if (!lados) return;
 
     Object.keys(lados).forEach(lado => {
       const total = lados[lado];
@@ -393,7 +393,22 @@ async function mostrarResumo() {
     intensidades[area] = { media, intensidade };
   });
 
-  // Gera HTML com média dentro da bolinha
+  // Cálculo da média e intensidade global
+  const raizerMedia = intensidades['Raizer']?.media ?? 0;
+  const caixaMedia = intensidades['Caixa']?.media ?? 0;
+  const mediasValidas = [raizerMedia, caixaMedia].filter(m => m > 0);
+  const mediaGlobal = mediasValidas.length > 0
+    ? mediasValidas.reduce((a, b) => a + b, 0) / mediasValidas.length
+    : 0;
+
+  let intensidadeGlobal = 'Limpa';
+  if (mediaGlobal >= 1 && mediaGlobal <= 2) intensidadeGlobal = 'Suave';
+  else if (mediaGlobal > 2 && mediaGlobal <= 3) intensidadeGlobal = 'Suave+';
+  else if (mediaGlobal > 3 && mediaGlobal <= 3.5) intensidadeGlobal = 'Média';
+  else if (mediaGlobal > 3.5 && mediaGlobal <= 4.2) intensidadeGlobal = 'Média+';
+  else if (mediaGlobal > 4.2 && mediaGlobal <= 5) intensidadeGlobal = 'Intensa';
+
+  // Gera bloco HTML
   const gerarBlocoResumo = (area, intensidade, classe, media) => `
     <div class="dashboard-resumo" style="margin-bottom: 2rem;">
       <p><strong>Área:</strong> ${area}</p>
@@ -415,6 +430,7 @@ async function mostrarResumo() {
     </div>
   `;
 
+  // Monta HTML
   const resumoHTML = `
     <p><strong>Usuário:</strong> ${userName}</p>
     <p><strong>Data/Hora:</strong> ${new Date(timestamp).toLocaleString()}</p>
@@ -431,21 +447,22 @@ async function mostrarResumo() {
       '';
       return gerarBlocoResumo(area, intensidade || 'Desconhecida', corClasse, media || 0);
     }).join('')}
+
+    <hr>
+    ${(() => {
+      const corClasseGlobal =
+        mediaGlobal === 0 ? 'intensidade-limpa' :
+        intensidadeGlobal === 'Suave' ? 'intensidade-suave' :
+        intensidadeGlobal === 'Suave+' ? 'intensidade-suave-plus' :
+        intensidadeGlobal === 'Média' ? 'intensidade-media' :
+        intensidadeGlobal === 'Média+' ? 'intensidade-media-plus' :
+        intensidadeGlobal === 'Intensa' ? 'intensidade-intensa' :
+      '';
+      return gerarBlocoResumo('Global', intensidadeGlobal, corClasseGlobal, mediaGlobal);
+    })()}
   `;
 
-  // Média geral para salvar no Firestore
-  const raizerMedia = intensidades['Raizer']?.media ?? 0;
-  const caixaMedia = intensidades['Caixa']?.media ?? 0;
-  const mediasValidas = [raizerMedia, caixaMedia].filter(m => m > 0);
-  const mediaGlobal = mediasValidas.length > 0
-    ? mediasValidas.reduce((a, b) => a + b, 0) / mediasValidas.length
-    : 0;
-
-  let intensidadeGlobal = 'Suave';
-  if (mediaGlobal >= 2.6 && mediaGlobal <= 4.5) intensidadeGlobal = 'Média';
-  else if (mediaGlobal > 4.5) intensidadeGlobal = 'Intensa';
-
-  // MONTA a estrutura de válvulas por área > lado > PL X
+  // Estrutura das válvulas para salvar
   const valvulasParaSalvar = {
     Raizer: { A: {}, B: {}, C: {}, D: {} },
     Caixa:  { A: {}, B: {}, C: {}, D: {} }
@@ -454,8 +471,7 @@ async function mostrarResumo() {
   ['Raizer', 'Caixa'].forEach(area => {
     Object.keys(countsByArea[area]).forEach(lado => {
       const total = countsByArea[area][lado];
-      const offset = getOffset(area, lado); // usa o mesmo cálculo dos nomes PL X
-
+      const offset = getOffset(area, lado);
       for (let i = 0; i < total; i++) {
         const nota = votos[area]?.[lado]?.[i] ?? 0;
         const plName = `PL ${offset + i + 1}`;
@@ -485,6 +501,7 @@ async function mostrarResumo() {
     alert('Erro ao salvar registro: ' + error.message);
   }
 }
+
 
 
 
