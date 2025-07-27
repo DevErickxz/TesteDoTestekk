@@ -225,10 +225,6 @@ function renderValves() {
 
 // Lógica de voto com confirmação de edição
 function handleVoto(index, nome) {
-  const atual = votos[currentArea][currentSide][index];
-  if (atual !== undefined && atual !== 1) {
-    if (!confirm(`Deseja editar a nota de ${nome}?`)) return;
-  }
   mostrarPergunta(index, nome);
 }
 
@@ -236,21 +232,31 @@ function handleVoto(index, nome) {
 function mostrarPergunta(index, nome) {
   perguntaContainer.innerHTML = '';
   perguntaContainer.classList.add('show');
+
   const box = document.createElement('div');
   box.className = 'pergunta-container';
-box.innerHTML = `
-  <div class="pergunta">Qual grau (0 a 5) para ${nome}?</div>
-  <div class="respostas">
-    ${[0,1,2,3,4,5].map(n => `<button>${n}</button>`).join('')}
-  </div>`;
-// Listener para cada botão
-box.querySelectorAll('.respostas button').forEach((btn, idx) => {
-  btn.onclick = () => {
-    votos[currentArea][currentSide][index] = idx; // idx agora é o valor de 0 a 5
-    perguntaContainer.classList.remove('show');
-    setTimeout(() => { perguntaContainer.innerHTML = ''; renderValves(); }, 300);
-  };
-});
+
+  const notas = [1, 2, 3, 4, 5]; // Só notas de 1 a 5
+
+  box.innerHTML = `
+    <div class="pergunta">Qual grau (1 a 5) para ${nome}?</div>
+    <div class="respostas">
+      ${notas.map(n => `<button data-valor="${n}">${n}</button>`).join('')}
+    </div>`;
+
+  // Listener para cada botão
+  box.querySelectorAll('.respostas button').forEach(btn => {
+    btn.onclick = () => {
+      const valor = parseInt(btn.getAttribute('data-valor'));
+      votos[currentArea][currentSide][index] = valor; // salva o valor real, não o índice
+      perguntaContainer.classList.remove('show');
+      setTimeout(() => {
+        perguntaContainer.innerHTML = '';
+        renderValves();
+      }, 300);
+    };
+  });
+
   perguntaContainer.appendChild(box);
 }
 
