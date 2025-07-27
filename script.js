@@ -292,61 +292,80 @@ async function mostrarResumo() {
   const pressaoRaizer = inputRaizer.value;
   const pressaoCaixa = inputCaixa.value;
   const timestamp = new Date().toISOString();
+
   const userDoc = await db.collection('users').doc(user.uid).get();
   const userName = userDoc.data()?.nome || 'Desconhecido';
 
-  // Calcula intensidade e média como antes
-  let somaNotas = 0;
-  let qtdVotadas = 0;
+  // Calcula intensidades separadas por área
+  const intensidades = {};
+
   ['Raizer', 'Caixa'].forEach(area => {
+    let soma = 0;
+    let qtd = 0;
+
     Object.keys(countsByArea[area]).forEach(lado => {
-      const count = countsByArea[area][lado];
-      const start = (() => {
-        const counts = countsByArea[area];
-        const offs = { A:0, B:counts.A, C:counts.A+counts.B, D:counts.A+counts.B+counts.C };
-        return offs[lado];
-      })();
-      for (let i = 0; i < count; i++) {
+      const total = countsByArea[area][lado];
+      for (let i = 0; i < total; i++) {
         const nota = votos[area][lado][i] ?? 0;
         if (nota > 0) {
-          somaNotas += nota;
-          qtdVotadas++;
+          soma += nota;
+          qtd++;
         }
       }
     });
+
+    const media = qtd > 0 ? (soma / qtd) : 0;
+    let intensidade = 'Suave';
+    if (media >= 2.6 && media <= 4.5) intensidade = 'Média';
+    else if (media > 4.5) intensidade = 'Intensa';
+
+    intensidades[area] = { media, intensidade };
   });
 
-  const media = qtdVotadas > 0 ? (somaNotas / qtdVotadas) : 0;
-  let intensidade = 'Suave';
-  if (media >= 2.6 && media <= 4.5) intensidade = 'Média';
-  else if (media > 4.5) intensidade = 'Intensa';
+  const gerarBlocoResumo = (area, intensidade, classe) => `
+    <div class="dashboard-resumo" style="margin-bottom: 2rem;">
+      <p><strong>Área:</strong> ${area}</p>
+      <p><strong>Intensidade:</strong> ${intensidade}</p>
+      <div class="intensidade-bola ${classe}" style="margin: 10px auto;"></div>
+    </div>
+  `;
 
-const corClasse =
-  intensidade === 'Suave'   ? 'intensidade-suave'
-: intensidade === 'Média'   ? 'intensidade-media'
-:                            'intensidade-intensa';
-
-const resumoHTML = `
-  <div class="dashboard-resumo">
-
+  const resumoHTML = `
     <p><strong>Usuário:</strong> ${userName}</p>
     <p><strong>Data/Hora:</strong> ${new Date(timestamp).toLocaleString()}</p>
     <hr>
-    <div class="intensidade-label">Intensidade: ${intensidade}</div>
-    <div class="intensidade-bola ${corClasse}"></div>
-  </div>
-`;
+    ${['Caixa', 'Raizer'].map(area => {
+      const { intensidade } = intensidades[area];
+      const corClasse =
+        intensidade === 'Suave' ? 'intensidade-suave' :
+        intensidade === 'Média' ? 'intensidade-media' :
+        'intensidade-intensa';
 
-  // Salva no DB (mantendo todas as válvulas, mas só mostra resumo simples)
-  let registroData = {
+      return gerarBlocoResumo(area, intensidade, corClasse);
+    }).join('')}
+  `;
+
+  // Opcional: salvar também no banco, só a intensidade geral combinada
+  const mediaGlobal = (() => {
+    const raizer = intensidades['Raizer'].media;
+    const caixa = intensidades['Caixa'].media;
+    const total = [raizer, caixa].filter(m => m > 0);
+    return total.length > 0 ? (raizer + caixa) / total.length : 0;
+  })();
+
+  let intensidadeGlobal = 'Suave';
+  if (mediaGlobal >= 2.6 && mediaGlobal <= 4.5) intensidadeGlobal = 'Média';
+  else if (mediaGlobal > 4.5) intensidadeGlobal = 'Intensa';
+
+  const registroData = {
     userId: user.uid,
     userName,
     data: timestamp,
     pressaoRaizer: pressaoRaizer || null,
     pressaoCaixa: pressaoCaixa || null,
-    intensidade,
-    notaIntensidade: media,
-    valvulas: {} // pode manter ou remover, conforme sua lógica
+    intensidade: intensidadeGlobal,
+    notaIntensidade: mediaGlobal,
+    valvulas: {} // você pode adicionar votos aqui se quiser salvar detalhado
   };
 
   try {
@@ -359,6 +378,7 @@ const resumoHTML = `
     alert('Erro ao salvar registro: ' + error.message);
   }
 }
+
 
 // Atualiza highlight dos botões de área e lado
 function updateActiveAreaButtonValveView() {
