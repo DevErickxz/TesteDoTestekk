@@ -145,13 +145,33 @@ async function handleGoogle() {
     const snap = await ref.get();
     if (!snap.exists) {
       modalPerfil.classList.add('show');
-      btnSalvarPerfil.onclick = async () => {
-        const nome = document.getElementById('perfil-nome').value.trim();
-        if (!nome) { alert('Informe seu nome completo.'); return; }
-        await ref.set({ email: user.email, nome });
-        modalPerfil.classList.remove('show');
-        startApp();
-      };
+btnSalvarPerfil.onclick = async () => {
+  const nome = document.getElementById('perfil-nome').value.trim();
+  const senha = document.getElementById('perfil-senha').value;
+
+  if (!nome) {
+    alert('Informe seu nome completo.');
+    return;
+  }
+
+  // Salva nome no Firestore
+  await ref.set({ email: user.email, nome });
+
+  // Se o usuário digitou uma senha, vincula ao login com e-mail/senha
+  if (senha) {
+    const credential = firebase.auth.EmailAuthProvider.credential(user.email, senha);
+    try {
+      await user.linkWithCredential(credential);
+      console.log('Senha vinculada com sucesso!');
+    } catch (e) {
+      console.error('Erro ao vincular senha:', e.message);
+      alert('Não foi possível vincular a senha: ' + e.message);
+    }
+  }
+
+  modalPerfil.classList.remove('show');
+  startApp();
+};
     } else {
       startApp();
     }
@@ -363,9 +383,12 @@ async function mostrarResumo() {
     });
 
     const media = qtd > 0 ? (soma / qtd) : 0;
-    let intensidade = 'Suave';
-    if (media >= 2.6 && media <= 4.5) intensidade = 'Média';
-    else if (media > 4.5) intensidade = 'Intensa';
+    let intensidade = 'Limpa';
+    if (media >= 1 && media <= 2) intensidade = 'Suave';
+    else if (media > 2 && media <= 3) intensidade = 'Suave+';
+    else if (media > 3 && media <= 3.5) intensidade = 'Média';
+    else if (media > 3.5 && media <= 4.2) intensidade = 'Média+';
+    else if (media > 4.2 && media <= 5) intensidade = 'Intensa';
 
     intensidades[area] = { media, intensidade };
   });
@@ -399,9 +422,11 @@ async function mostrarResumo() {
     ${['Caixa', 'Raizer'].map(area => {
       const { intensidade, media } = intensidades[area] || {};
       const corClasse =
-        media === 0 ? 'intensidade-zero' :
+        media === 0 ? 'intensidade-limpa' :
         intensidade === 'Suave' ? 'intensidade-suave' :
+        intensidade === 'Suave+' ? 'intensidade-suave-plus' :
         intensidade === 'Média' ? 'intensidade-media' :
+        intensidade === 'Média+' ? 'intensidade-media-plus' :
         intensidade === 'Intensa' ? 'intensidade-intensa' :
       '';
       return gerarBlocoResumo(area, intensidade || 'Desconhecida', corClasse, media || 0);
@@ -452,7 +477,7 @@ async function mostrarResumo() {
 
   try {
     await db.collection('registros').add(registroData);
-    alert('Registro salvo com sucesso!');
+
     resumoTextModal.innerHTML = resumoHTML;
     modalResumo.classList.add('show');
   } catch (error) {

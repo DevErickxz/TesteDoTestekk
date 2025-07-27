@@ -961,9 +961,14 @@ canvas[data-empty="true"]::after {
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   border: 4px solid #eee;
 }
-.intensidade-suave   { background: #4caf50; }
+.intensidade-limpa   { background: #000000; }
+
+.intensidade-suave   { background: #73f177; }
+.intensidade-suave-plus { background: #127102;}
 .intensidade-media   { background: #ffd600; }
+.intensidade-media-plus { background: #c68c02; }
 .intensidade-intensa { background: #e53935; }
+
 .intensidade-label {
   font-size: 1.3rem;
   font-weight: bold;
@@ -982,7 +987,3 @@ canvas[data-empty="true"]::after {
   }
 }
 
-.intensidade-zero {
-  background-color: #000; /* preto */
-  color: #fff;
-}
