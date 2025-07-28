@@ -50,7 +50,7 @@ let userDisplay;
  * Retorna os nomes de válvulas contínuos para a área e lado informados,
  * baseando-se em countsByArea e no mapeamento global de 1 a 48.
  */
-
+let searchChart = null;
 
 
 
@@ -339,6 +339,19 @@ btnDownload.onclick = () => {
   });
 };
 
+document.getElementById('search-area').onchange =
+document.getElementById('search-side').onchange = () => {
+  const area = document.getElementById('search-area').value;
+  const lado = document.getElementById('search-side').value;
+  const sel = document.getElementById('search-valve');
+  sel.innerHTML = '';
+  getValvesList(area, lado).forEach(nome => {
+    const opt = document.createElement('option');
+    opt.value = nome;
+    opt.textContent = nome;
+    sel.appendChild(opt);
+  });
+};
 }
 
 function getOffset(area, lado) {
@@ -783,6 +796,168 @@ function ajustarAlturaContainer() {
 // Sempre que trocar de lado ou área, chame:
 ajustarAlturaContainer();
 
+ // variável global
+function populateSearchValveOptions() {
+  const area = document.getElementById('search-area').value;
+  const lado = document.getElementById('search-side').value;
+  const valveSelect = document.getElementById('search-valve');
+
+  valveSelect.innerHTML = '';
+
+  const quantidade = countsByArea?.[area]?.[lado] || 0;
+
+  for (let i = 1; i <= quantidade; i++) {
+    const pl = `PL ${i}`;
+    const option = document.createElement('option');
+    option.value = pl;
+    option.textContent = pl;
+    valveSelect.appendChild(option);
+  }
+}
 
 
+async function performGraphSearch() {
+  const dateStr   = document.getElementById('search-date').value;       
+  const area      = document.getElementById('search-area').value;       
+  const lado      = document.getElementById('search-side').value;       
+  const valveUI   = document.getElementById('search-valve').value;      
+  const tipo      = document.getElementById('search-chart-type').value;
+  const ctx       = document.getElementById('search-chart').getContext('2d');
+
+  if (!dateStr || !valveUI) {
+    alert('Escolha uma data e uma válvula antes de buscar.');
+    return;
+  }
+
+ // <-- Aqui está a correção!
+
+  const snapshot = await db.collection('registros').get();
+  const ocorrencias = [];
+
+  snapshot.forEach(doc => {
+    const d = doc.data();
+
+    if (!d.data) return;
+    let registroDate;
+    try {
+      registroDate = new Date(d.data);
+      if (isNaN(registroDate.getTime())) return;
+    } catch (e) {
+      return;
+    }
+
+    const registroDay = registroDate.toISOString().slice(0, 10);
+    if (registroDay !== dateStr) return;
+
+    const nota = d.valvulas?.[area]?.[lado]?.[valveUI];
+    if (nota !== undefined && nota > 0) {
+      ocorrencias.push(Number(nota));
+    }
+  });
+
+  if (searchChart) {
+    searchChart.destroy();
+    searchChart = null;
+  }
+
+
+
+  if (tipo === 'line') {
+    const labels = ocorrencias.map((_, i) => `#${i + 1}`);
+    searchChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: `Notas ${valveUI} em ${dateStr}`,
+          data: ocorrencias,
+          fill: false,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: { title: { display: true, text: 'Ocorrência' } },
+          y: {
+            title: { display: true, text: 'Nota' },
+            beginAtZero: true,
+            max: 5,
+            ticks: { stepSize: 1 }
+          }
+        }
+      }
+    });
+  } else {
+    const freq = {1:0,2:0,3:0,4:0,5:0};
+    ocorrencias.forEach(n => {
+      if (freq[n] !== undefined) freq[n]++;
+    });
+    const labels = ['1','2','3','4','5'];
+    const dataPts = labels.map(l => freq[l]);
+
+    searchChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: `Frequência de notas - ${valveUI} em ${dateStr}`,
+          data: dataPts
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: { title: { display: true, text: 'Nota' } },
+          y: { 
+            title: { display: true, text: 'Quantidade' },
+            beginAtZero: true 
+          }
+        }
+      }
+    });
+  }
+}
+
+
+
+
+
+function showSearchGraphView() {
+  // 1) Exibe a view de busca
+  showView('search-graph-view');
+
+  // 2) Define data padrão (hoje) no único datepicker
+  const today = new Date().toISOString().split('T')[0];
+  const dateInput = document.getElementById('search-date');
+  if (dateInput) dateInput.value = today;
+
+  // 3) Reseta o tipo de gráfico para "linha"
+  const typeSelect = document.getElementById('search-chart-type');
+  if (typeSelect) typeSelect.value = 'line';
+
+  // 4) Popula o select de válvulas baseado em área/lado atuais
+  const selArea  = document.getElementById('search-area')
+  const selSide  = document.getElementById('search-side')
+  const selValve = document.getElementById('search-valve');
+  if (selArea && selSide && selValve) {
+    // dispara seu listener de onchange para preencher as opções
+    selArea.dispatchEvent(new Event('change'));
+    selSide.dispatchEvent(new Event('change'));
+  }
+
+  // 5) Limpa qualquer gráfico anterior
+  if (searchChart) {
+    searchChart.destroy();
+    searchChart = null;
+  }
+
+  // 6) Limpa o canvas
+  const canvas = document.getElementById('search-chart');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+    
+}
 
