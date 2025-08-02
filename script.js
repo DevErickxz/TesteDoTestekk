@@ -65,7 +65,7 @@ function getValvesList(area, side) {
   };
   const start = offsets[side];
   const total = counts[side];
-  return Array.from({ length: total }, (_, i) => `Válvula ${start + i + 1}`);
+  return Array.from({ length: total }, (_, i) => `PL ${start + i + 1}`);
 }
 
 function atualizarSelectValvulasComBaseNaAreaELado() {
@@ -829,10 +829,8 @@ async function performGraphSearch() {
     return;
   }
 
- // <-- Aqui está a correção!
-
   const snapshot = await db.collection('registros').get();
-  const ocorrencias = [];
+  const dadosOrdenados = [];
 
   snapshot.forEach(doc => {
     const d = doc.data();
@@ -851,8 +849,17 @@ async function performGraphSearch() {
 
     const nota = d.valvulas?.[area]?.[lado]?.[valveUI];
     if (nota !== undefined && nota > 0) {
-      ocorrencias.push(Number(nota));
+      dadosOrdenados.push({ nota: Number(nota), hora: registroDate });
     }
+  });
+
+  // Ordena por hora crescente
+  dadosOrdenados.sort((a, b) => a.hora - b.hora);
+
+  const ocorrencias = dadosOrdenados.map(d => d.nota);
+  const horas       = dadosOrdenados.map(d => {
+    const h = d.hora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    return `Nota: ${d.nota} - ${h}`;
   });
 
   if (searchChart) {
@@ -860,30 +867,38 @@ async function performGraphSearch() {
     searchChart = null;
   }
 
-
-
   if (tipo === 'line') {
-    const labels = ocorrencias.map((_, i) => `#${i + 1}`);
     searchChart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels,
-        datasets: [{
-          label: `Notas ${valveUI} em ${dateStr}`,
-          data: ocorrencias,
-          fill: false,
-          tension: 0.4
-        }]
+        labels: horas,
+      datasets: [{
+        label: `Notas ${valveUI} em ${dateStr}`,
+        data: ocorrencias,
+        fill: false,
+        tension: 0.4,
+        borderColor: '#007bff',
+        backgroundColor: '#007bff',
+        pointRadius: 6,
+        pointHoverRadius: 8
+      }]
       },
       options: {
         responsive: true,
         scales: {
-          x: { title: { display: true, text: 'Ocorrência' } },
+          x: { title: { display: false, text: 'Hora' } },
           y: {
             title: { display: true, text: 'Nota' },
             beginAtZero: true,
-            max: 5,
+            max: 6,
             ticks: { stepSize: 1 }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: context => `Nota: ${context.parsed.y}`
+            }
           }
         }
       }
@@ -893,18 +908,18 @@ async function performGraphSearch() {
     ocorrencias.forEach(n => {
       if (freq[n] !== undefined) freq[n]++;
     });
-    const labels = ['1','2','3','4','5'];
-    const dataPts = labels.map(l => freq[l]);
-
+    const labels = ocorrencias.map((_, i) => `#${i + 1}`);
+    const dataPts = ocorrencias;
+    
     searchChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
         datasets: [{
-          label: `Frequência de notas - ${valveUI} em ${dateStr}`,
-          data: dataPts
-        }]
-      },
+        label: `Notas ${valveUI} em ${dateStr}`,
+        data: dataPts
+      }]
+    },
       options: {
         responsive: true,
         scales: {
@@ -918,6 +933,7 @@ async function performGraphSearch() {
     });
   }
 }
+
 
 
 
@@ -961,3 +977,65 @@ function showSearchGraphView() {
     
 }
 
+
+// async function generateBarChart(ladoSelecionado) {
+//   const ctx = document.getElementById('bar-chart-canvas').getContext('2d');
+//   const periodo = parseInt(document.getElementById('bar-chart-period').value, 10);
+//   const area = currentArea || 'Raizer'; // ou 'Caixa', se preferir
+
+//   const hoje = new Date();
+//   const inicio = new Date(hoje);
+//   inicio.setDate(hoje.getDate() - periodo);
+
+//   const snapshot = await db.collection('registros').get();
+
+//   const ocorrencias = [];
+
+//   snapshot.forEach(doc => {
+//     const d = doc.data();
+//     const dataRegistro = new Date(d.data);
+//     if (isNaN(dataRegistro.getTime())) return;
+
+//     if (dataRegistro < inicio || dataRegistro > hoje) return;
+
+//     const valvulas = d.valvulas?.[area]?.[ladoSelecionado];
+//     if (!valvulas) return;
+
+//     Object.values(valvulas).forEach(nota => {
+//       if (typeof nota === 'number' && nota > 0) {
+//         ocorrencias.push(nota);
+//       }
+//     });
+//   });
+
+//   if (searchChart) {
+//     searchChart.destroy();
+//     searchChart = null;
+//   }
+
+//   const labels = ocorrencias.map((_, i) => `#${i + 1}`);
+
+//   searchChart = new Chart(ctx, {
+//     type: 'bar',
+//     data: {
+//       labels,
+//       datasets: [{
+//         label: `Notas encontradas - ${area} - Lado ${ladoSelecionado} (${periodo} dias)`,
+//         data: ocorrencias,
+//         backgroundColor: '#42a5f5'
+//       }]
+//     },
+//     options: {
+//       responsive: true,
+//       scales: {
+//         x: { title: { display: true, text: 'Ocorrência' } },
+//         y: {
+//           title: { display: true, text: 'Nota' },
+//           beginAtZero: true,
+//           max: 5,
+//           ticks: { stepSize: 1 }
+//         }
+//       }
+//     }
+//   });
+// }

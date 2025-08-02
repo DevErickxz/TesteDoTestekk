@@ -987,3 +987,37 @@ canvas[data-empty="true"]::after {
   }
 }
 
+#bar-chart-view .title {
+  font-size: 1.8rem;
+  color: #5e35b1;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+#bar-chart-view .chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+#bar-chart-canvas {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.voltar-btn, .baixar-btn, .lado-btn {
+  background: #7e57c2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.voltar-btn:hover, .baixar-btn:hover, .lado-btn:hover {
+  background: #5e35b1;
+}
