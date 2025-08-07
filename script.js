@@ -868,25 +868,37 @@ async function performGraphSearch() {
   }
 
   if (tipo === 'line') {
+    ctx.canvas.height = 300;
+    ctx.canvas.width = 500;
     searchChart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: horas,
-      datasets: [{
-        label: `Notas ${valveUI} em ${dateStr}`,
-        data: ocorrencias,
-        fill: false,
-        tension: 0.4,
-        borderColor: '#007bff',
-        backgroundColor: '#007bff',
-        pointRadius: 6,
-        pointHoverRadius: 8
-      }]
+        datasets: [{
+          label: `Notas ${valveUI} em ${dateStr}`,
+          data: ocorrencias,
+          fill: true,
+          tension: 0.5,
+          borderColor: '#007bff',
+          backgroundColor: 'rgba(0, 123, 255, 0.2)',
+          pointBackgroundColor: '#007bff',
+          pointRadius: 7,
+          pointHoverRadius: 9,
+          borderWidth: 1
+        }]
       },
       options: {
         responsive: true,
+        
         scales: {
-          x: { title: { display: false, text: 'Hora' } },
+          x: { 
+            title: { display: false, text: 'Hora' },
+            ticks: {
+              maxRotation: 45,
+              minRotation: 45,
+              autoSkip: false
+            }
+          },
           y: {
             title: { display: true, text: 'Nota' },
             beginAtZero: true,
@@ -899,10 +911,16 @@ async function performGraphSearch() {
             callbacks: {
               label: context => `Nota: ${context.parsed.y}`
             }
+          },
+          legend: {
+            labels: {
+              font: { size: 9 }
+            }
           }
         }
       }
     });
+
   } else {
     const freq = {1:0,2:0,3:0,4:0,5:0};
     ocorrencias.forEach(n => {
@@ -916,23 +934,28 @@ async function performGraphSearch() {
       data: {
         labels,
         datasets: [{
-        label: `Notas ${valveUI} em ${dateStr}`,
-        data: dataPts
-      }]
-    },
+          label: `Notas ${valveUI} em ${dateStr}`,
+          data: dataPts,
+          backgroundColor: 'rgba(0, 123, 255, 0.7)',
+          borderRadius: 4
+        }]
+      },
       options: {
         responsive: true,
+        
         scales: {
           x: { title: { display: true, text: 'Nota' } },
           y: { 
             title: { display: true, text: 'Quantidade' },
-            beginAtZero: true 
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
           }
         }
       }
     });
   }
 }
+
 
 
 
@@ -1039,3 +1062,5 @@ function showSearchGraphView() {
 //     }
 //   });
 // }
+
+

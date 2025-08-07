@@ -28,11 +28,7 @@
         justify-items: center;
     }
     /* Media query para telas menores, para quebrar a linha */
-    @media (max-width: 768px) {
-        #statistics-view .valvulas-list {
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Ajusta para telas menores */
-        }
-    }
+
 
     #statistics-view .valvula-item {
         background-color: #f0f0f0;
@@ -394,7 +390,7 @@
     <h1>Opções de Gráfico</h1>
 
     <div class="top-bar">
-      <button onclick="showBarChart()">EM MANUNTENÇÃO(BARRAS)</button>
+      <!-- <button onclick="showBarChart()">EM MANUNTENÇÃO(BARRAS)</button> -->
       <button onclick="showSearchGraphView()">Pesquisar</button>
 
       <button onclick="showView('statistics-view'); initStatisticsView();">Ver Estatísticas de Válvulas</button>
@@ -417,6 +413,9 @@
         <canvas id="grafico-valvulas"></canvas>
     </div>
   </div>
+
+
+
 
   <div id="statistics-view" class="view">
     <div class="top-bar">

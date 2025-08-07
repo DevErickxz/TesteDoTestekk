@@ -196,14 +196,18 @@ form button:hover {
 
 /* Estilo para o botão SAIR */
 #btn-sair {
-      padding: 0.75rem 1.5rem;
+  position: absolute;
+  top: 95px;   /* distância vertical em relação ao container */
+  left: 2px;
+  padding: 0.75rem 3.7rem;
   border: none;
   border-radius: 25px; /* Mais arredondado */
   color: #fff;
   cursor: pointer;
   font-weight: 600;
   font-size: 1.1rem;
-  margin: 0 0.5rem; /* Espaçamento entre eles */
+  
+  margin: 0 0.1rem; /* Espaçamento entre eles */
   box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais proeminente */
   transition: background 0.2s, transform 0.1s;
 }
@@ -219,15 +223,18 @@ form button:hover {
 
 
 #btn-show-pressure-input {
-  padding: 0.75rem 1.5rem;
-
+  position: relative;
+  top:0;
+  left: 14px;
+  padding: 0.75rem 2.4rem;
+  
   border: none;
   border-radius: 25px; /* Mais arredondado */
   color: #fff;
   cursor: pointer;
   font-weight: 600;
   font-size: 1.1rem;
-  margin: 30px 1rem; /* Espaçamento entre eles */
+  margin: 30px 0.1rem; /* Espaçamento entre eles */
   box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais proeminente */
   transition: background 0.2s, transform 0.1s;
 }
@@ -245,15 +252,18 @@ form button:hover {
 
 
 #btn-Graphics {
-  padding: 0.75rem 1.5rem;
-
+  position: relative;
+  top:0;
+  left:0;
+  padding: 0.75rem 1.52rem;
+  
   border: none;
   border-radius: 25px; /* Mais arredondado */
   color: #fff;
   cursor: pointer;
   font-weight: 600;
   font-size: 1.1rem;
-  margin: 0 1rem; /* Espaçamento entre eles */
+  margin: 0 0.2rem; /* Espaçamento entre eles */
   box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais proeminente */
   transition: background 0.2s, transform 0.1s;
 }
@@ -267,7 +277,32 @@ form button:hover {
   transform: translateY(-2px);
 }
 
+#btn-confirmar {
+  position: absolute;
+  top: 95px;   /* mesma altura que o sair */
+  left: 177px;
+  padding: 0.75rem 3.2rem;
+  border: none;
+  display: grid;
+  border-radius: 25px; /* Mais arredondado */
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0 0.2rem; /* Espaçamento entre eles */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais proeminente */
+  transition: background 0.2s, transform 0.1s;
+}
 
+
+
+#btn-confirmar {
+  background: var(--success-color); /* Usando a variável de cor de sucesso */
+}
+#btn-confirmar:hover {
+  background: var(--success-color-darken); /* Usando a variável de cor escurecida */
+  transform: translateY(-2px);
+}
 
 
 
@@ -459,32 +494,12 @@ form button:hover {
 
 /* Reset e Confirmar */
 #confirmar-container {
+  position: relative;
   text-align: center;
   margin-top: 2rem;
 }
 
-#btn-confirmar {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 25px; /* Mais arredondado */
-  color: #fff;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin: 0 0.5rem; /* Espaçamento entre eles */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra mais proeminente */
-  transition: background 0.2s, transform 0.1s;
-}
 
-
-
-#btn-confirmar {
-  background: var(--success-color); /* Usando a variável de cor de sucesso */
-}
-#btn-confirmar:hover {
-  background: var(--success-color-darken); /* Usando a variável de cor escurecida */
-  transform: translateY(-2px);
-}
 
 /* Modals */
 .modal {
@@ -1021,3 +1036,4 @@ canvas[data-empty="true"]::after {
 .voltar-btn:hover, .baixar-btn:hover, .lado-btn:hover {
   background: #5e35b1;
 }
+
