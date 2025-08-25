@@ -198,7 +198,7 @@ form button:hover {
 #btn-sair {
   position: absolute;
   top: 95px;   /* distância vertical em relação ao container */
-  left: 2px;
+  left: 0px;
   padding: 0.75rem 3.7rem;
   border: none;
   border-radius: 25px; /* Mais arredondado */
@@ -280,7 +280,7 @@ form button:hover {
 #btn-confirmar {
   position: absolute;
   top: 95px;   /* mesma altura que o sair */
-  left: 175px;
+  left: 171px;
   padding: 0.75rem 3.2rem;
   border: none;
   display: grid;
