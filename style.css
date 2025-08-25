@@ -280,7 +280,7 @@ form button:hover {
 #btn-confirmar {
   position: absolute;
   top: 95px;   /* mesma altura que o sair */
-  left: 171px;
+  left: 170px;
   padding: 0.75rem 3.2rem;
   border: none;
   display: grid;
